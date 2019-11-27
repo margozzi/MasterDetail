@@ -1,0 +1,7 @@
+.no-table-header table thead {
+  display: none;
+}
+
+.detail-highlight {
+  background-color: bisque !important;
+}

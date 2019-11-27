@@ -1,0 +1,39 @@
+# Wrap lines to a fixed readable width.
+printWidth: 120
+
+# Indent with 2 spaces.
+tabWidth: 2
+useTabs: false
+
+# Add a semicolon at the end of every statement.
+semi: true
+
+# Prefer single quotes.
+singleQuote: true
+
+# Prefer double quotes for JSX properties.
+jsxSingleQuote: false
+
+# Only add quotes around object properties where required.
+quoteProps: "as-needed"
+
+# Trailing commas where valid in ES5 (objects, arrays, etc.)
+trailingComma: "es5"
+
+# Add whitespace inside brackets.
+bracketSpacing: false
+
+# Place JSX brackets on their own line.
+jsxBracketSameLine: false
+
+# Only use parentheses around arrow function arguments if required.
+arrowParens: "avoid"
+
+# Prose wrap for Markdown text. No opinion yet. Use default.
+# proseWrap: "preserve"
+
+# HTML white space. No opinion yet. Use default.
+# htmlWhitespaceSensitivity: "css"
+
+# Use linefeed (LF) only end of lines.
+endOfLine: "lf"
