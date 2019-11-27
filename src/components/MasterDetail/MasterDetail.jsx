@@ -108,20 +108,14 @@ class MasterDetail extends Component {
     right: 0,
   };
 
-  columnModelSmall = [
+  columnModel = [
     {field: 'user', header: 'User', width: 140},
     {field: 'mac', header: 'MAC Address', width: 140},
     {field: 'name', header: 'Name', width: 200},
-  ];
-
-  mediumColumns = [
     {field: 'role', header: 'Role', width: 80},
     {field: 'manufacturer', header: 'Manufacturer', width: 120},
     {field: 'type', header: 'Type', width: 130},
     {field: 'model', header: 'Model', width: 80},
-  ];
-
-  largeColumns = [
     {field: 'status', header: 'Status', width: 70},
     {field: 'credentials', header: 'Credentials', width: 110},
     {field: 'enabled', header: 'Enabled', width: 80, formatter: new ColumnFormatter({field: 'enabled'}).yesNoTemplate},
@@ -141,14 +135,13 @@ class MasterDetail extends Component {
     this.confirmDialog = React.createRef();
     this.state = {
       breakpoints: [600, 1500, 2000],
+      breakpointColumns: [3, 7, 12],
       selected: [],
       data: [],
       totalRecords: 0,
       detailItem: null,
       searchString: '',
     };
-    this.columnModelMedium = this.columnModelSmall.concat(this.mediumColumns);
-    this.columnModelLarge = this.columnModelMedium.concat(this.largeColumns);
 
     this.deviceTemplate = this.deviceTemplate.bind(this);
     this.onSummarySelection = this.onSummarySelection.bind(this);
@@ -304,14 +297,14 @@ class MasterDetail extends Component {
       case 'mobile':
         return <Column body={this.deviceTemplate} />;
       case 'large':
-        model = this.columnModelLarge;
+        model = this.columnModel;
         break;
       case 'medium':
-        model = this.columnModelMedium;
+        model = this.columnModel.slice(0, this.state.breakpointColumns[1]);
         break;
       case 'small':
       default:
-        model = this.columnModelSmall;
+        model = this.columnModel.slice(0, this.state.breakpointColumns[0]);
     }
 
     var cm = model.map(item => (
@@ -386,7 +379,7 @@ class MasterDetail extends Component {
                 message="Are you sure you want to delete the selected items?"
                 callBack={this.deleteSelected}
               ></YesNoDialog>
-              <div className="p-col" style={{flexBasis: '400px'}}>
+              <div className="p-col" style={{margin: '10px', flexBasis: '400px'}}>
                 {!mobile && this.props.useOverlay && (
                   <OverlayPanel style={this.centerStyle} ref={el => (this.overlayPanel = el)}>
                     <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
