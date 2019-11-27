@@ -1,14 +1,14 @@
-import { Button } from 'primereact/button';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
-import { InputText } from 'primereact/inputtext';
-import { Menu } from 'primereact/menu';
-import { OverlayPanel } from 'primereact/overlaypanel';
-import { PropTypes } from 'prop-types';
+import {Button} from 'primereact/button';
+import {Column} from 'primereact/column';
+import {DataTable} from 'primereact/datatable';
+import {InputText} from 'primereact/inputtext';
+import {Menu} from 'primereact/menu';
+import {OverlayPanel} from 'primereact/overlaypanel';
+import {PropTypes} from 'prop-types';
 import queryString from 'query-string';
-import React, { Component } from 'react';
-import Media from 'react-media';
-import { withRouter } from 'react-router-dom';
+import React, {Component} from 'react';
+import ResizeDetector from 'react-resize-detector';
+import {withRouter} from 'react-router-dom';
 import ColumnFormatter from '../../services/ColumnFormatter';
 import DeviceDetails from '../DeviceDetail/DeviceDetails';
 import SelectionButton from '../SelectionButton/SelectionButton';
@@ -42,7 +42,7 @@ class MasterDetail extends Component {
 
   editMenuItem = {
     label: 'Edit',
-    command: () => { },
+    command: () => {},
   };
 
   disableMenuItem = {
@@ -57,7 +57,7 @@ class MasterDetail extends Component {
           }
         }
       });
-      this.setState({ data: clone });
+      this.setState({data: clone});
     },
   };
 
@@ -73,7 +73,7 @@ class MasterDetail extends Component {
           }
         }
       });
-      this.setState({ data: clone });
+      this.setState({data: clone});
     },
   };
 
@@ -109,29 +109,29 @@ class MasterDetail extends Component {
   };
 
   columnModelSmall = [
-    { field: 'user', header: 'User', width: 140 },
-    { field: 'mac', header: 'MAC Address', width: 140 },
-    { field: 'name', header: 'Name', width: 200 },
+    {field: 'user', header: 'User', width: 140},
+    {field: 'mac', header: 'MAC Address', width: 140},
+    {field: 'name', header: 'Name', width: 200},
   ];
 
   mediumColumns = [
-    { field: 'role', header: 'Role', width: 80 },
-    { field: 'manufacturer', header: 'Manufacturer', width: 120 },
-    { field: 'type', header: 'Type', width: 130 },
-    { field: 'model', header: 'Model', width: 80 },
+    {field: 'role', header: 'Role', width: 80},
+    {field: 'manufacturer', header: 'Manufacturer', width: 120},
+    {field: 'type', header: 'Type', width: 130},
+    {field: 'model', header: 'Model', width: 80},
   ];
 
   largeColumns = [
-    { field: 'status', header: 'Status', width: 70 },
-    { field: 'credentials', header: 'Credentials', width: 110 },
-    { field: 'enabled', header: 'Enabled', width: 80, formatter: new ColumnFormatter({ field: 'enabled' }).yesNoTemplate },
-    { field: 'active', header: 'Active', width: 80, formatter: new ColumnFormatter({ field: 'active' }).yesNoTemplate },
-    { field: 'added', header: 'Added', width: 100, formatter: new ColumnFormatter({ field: 'added' }).dateShortTemplate },
+    {field: 'status', header: 'Status', width: 70},
+    {field: 'credentials', header: 'Credentials', width: 110},
+    {field: 'enabled', header: 'Enabled', width: 80, formatter: new ColumnFormatter({field: 'enabled'}).yesNoTemplate},
+    {field: 'active', header: 'Active', width: 80, formatter: new ColumnFormatter({field: 'active'}).yesNoTemplate},
+    {field: 'added', header: 'Added', width: 100, formatter: new ColumnFormatter({field: 'added'}).dateShortTemplate},
     {
       field: 'expires',
       header: 'Cert Expires',
       width: 100,
-      formatter: new ColumnFormatter({ field: 'expires' }).dateFromNowTemplate,
+      formatter: new ColumnFormatter({field: 'expires'}).dateFromNowTemplate,
     },
   ];
 
@@ -140,6 +140,7 @@ class MasterDetail extends Component {
     this.deviceLabel = React.createRef();
     this.confirmDialog = React.createRef();
     this.state = {
+      breakpoints: [600, 1500, 2000],
       selected: [],
       data: [],
       totalRecords: 0,
@@ -232,19 +233,19 @@ class MasterDetail extends Component {
 
   buildSearchHeader = () => {
     return (
-      <div className="p-grid p-align-center p-nogutter" style={{ marginBottom: '10px' }}>
-        <div ref={this.deviceLabel} className="p-col-fixed" style={{ fontSize: '24px', marginRight: '20px' }}>
+      <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
+        <div ref={this.deviceLabel} className="p-col-fixed" style={{fontSize: '24px', marginRight: '20px'}}>
           Devices
         </div>
         <div className="p-inputgroup p-col">
           <InputText
-            onFocus={this.size === 'mobile' ? this.toggleDeviceLabel : () => { }}
-            onBlur={this.size === 'mobile' ? this.toggleDeviceLabel : () => { }}
-            style={{ width: '100%' }}
+            onFocus={this.size === 'mobile' ? this.toggleDeviceLabel : () => {}}
+            onBlur={this.size === 'mobile' ? this.toggleDeviceLabel : () => {}}
+            style={{width: '100%'}}
             placeholder="Search Devices"
             value={this.state.searchString}
             onChange={e => {
-              this.setState({ searchString: e.target.value });
+              this.setState({searchString: e.target.value});
               let newQuery = queryString.parse(this.props.location.search);
               if (e.target.value === '') {
                 delete newQuery.search;
@@ -252,7 +253,7 @@ class MasterDetail extends Component {
                 newQuery.search = e.target.value;
               }
               this.props.history.replace({
-                search: queryString.stringify(newQuery, { encode: false }),
+                search: queryString.stringify(newQuery, {encode: false}),
               });
               this.search(e.target.value);
             }}
@@ -262,7 +263,7 @@ class MasterDetail extends Component {
         <Button
           className="p-col-fixed"
           icon="pi pi-bars"
-          style={{ marginLeft: '20px' }}
+          style={{marginLeft: '20px'}}
           onClick={event => this.menu.toggle(event)}
         />
       </div>
@@ -277,12 +278,12 @@ class MasterDetail extends Component {
 
   buildSelectionHeader = () => {
     return (
-      <div className="p-grid p-align-center p-nogutter" style={{ marginBottom: '10px' }}>
+      <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
         <Button className="p-col-fixed" icon="pi pi-chevron-left" onClick={this.clearSelection} />
-        <div className="p-col-fixed" style={{ fontSize: '18px', marginLeft: '20px' }}>
+        <div className="p-col-fixed" style={{fontSize: '18px', marginLeft: '20px'}}>
           {this.state.selected.length}
         </div>
-        <div className="p-col" style={{ width: '100%' }}>
+        <div className="p-col" style={{width: '100%'}}>
           &nbsp;
         </div>
         <Button className="p-col-fixed" icon="pi pi-trash" />
@@ -290,7 +291,7 @@ class MasterDetail extends Component {
         <Button
           className="p-col-fixed"
           icon="pi pi-bars"
-          style={{ marginLeft: '27px' }}
+          style={{marginLeft: '27px'}}
           onClick={event => this.menu.toggle(event)}
         />
       </div>
@@ -318,7 +319,7 @@ class MasterDetail extends Component {
         field={item.field}
         header={item.header}
         loadingBody={this.loadingText}
-        style={{ width: item.width + 'px' }}
+        style={{width: item.width + 'px'}}
         body={item.formatter}
         key={Number(item.id).toString()}
       />
@@ -328,77 +329,15 @@ class MasterDetail extends Component {
       <Column
         header={<SelectionButton initials=" " bgColor="transparent" onClick={this.changeAll} />}
         body={this.buttonTemplate}
-        style={{ minWidth: '60px', width: '60px' }}
+        style={{minWidth: '60px', width: '60px'}}
         key={'selectAll'}
       />
     );
     return cm;
   };
 
-  buildTable = size => {
-    this.size = size;
-    return (
-      <div className="p-grid" style={size !== 'small' ? { flexWrap: 'nowrap' } : {}}>
-        <YesNoDialog
-          ref={this.confirmDialog}
-          header="Delete"
-          message="Are you sure you want to delete the selected items?"
-          callBack={this.deleteSelected}
-        ></YesNoDialog>
-        <div className="p-col" style={{ flexBasis: '400px' }}>
-          {size !== 'mobile' && this.props.useOverlay && (
-            <OverlayPanel style={this.centerStyle} ref={el => (this.overlayPanel = el)}>
-              <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
-            </OverlayPanel>
-          )}
-          {size === 'mobile' && this.state.selected.length === 0 && this.buildSearchHeader()}
-          {size === 'mobile' && this.state.selected.length > 0 && this.buildSelectionHeader()}
-          {size !== 'mobile' && this.buildSearchHeader()}
-          <DataTable
-            className={size === 'mobile' ? 'no-table-header' : ''}
-            value={this.state.data}
-            resizableColumns={size !== 'mobile'}
-            reorderableColumns={size !== 'mobile'}
-            metaKeySelection={false}
-            selection={this.state.selected}
-            onSelectionChange={e => this.updateSelectedAndUrl(e.value)}
-            scrollable={true}
-            scrollHeight={size === 'mobile' ? 'calc(100vh - 70px)' : 'calc(100vh - 125px)'}
-            onRowClick={e => {
-              let newQuery = queryString.parse(this.props.location.search);
-              if (e.data === this.state.detailItem) {
-                this.setState({ detailItem: null }); // toggle it if already selected
-                if (this.props.useOverlay) {
-                  this.overlayPanel.hide();
-                }
-                delete newQuery.detail;
-              } else {
-                this.setState({ detailItem: e.data });
-                if (this.props.useOverlay) {
-                  this.overlayPanel.show(e);
-                }
-                newQuery.detail = e.data.id;
-              }
-              this.props.history.replace({
-                search: queryString.stringify(newQuery, { encode: false }),
-              });
-            }}
-            rowClassName={this.rowClassName}
-          >
-            {this.buildColumnModel(size)}
-          </DataTable>
-        </div>
-        {this.state.detailItem && size !== 'mobile' && !this.props.useOverlay && (
-          <div className="p-col" style={{ flexBasis: '500px', minWidth: '400px', maxWidth: '600px' }}>
-            <DeviceDetails itemData={this.state.detailItem} onClose={this.clearDetails} />
-          </div>
-        )}
-      </div>
-    );
-  };
-
   rowClassName = item => {
-    return { 'p-highlight': this.isSelected(item), 'detail-highlight': this.isDetailItem(item) };
+    return {'p-highlight': this.isSelected(item), 'detail-highlight': this.isDetailItem(item)};
   };
 
   isSelected = item => {
@@ -419,26 +358,91 @@ class MasterDetail extends Component {
     });
   }
 
+  getSize = width => {
+    const breakpoints = this.state.breakpoints;
+    if (width < breakpoints[0]) {
+      return 'mobile';
+    } else if (width >= breakpoints[0] && width < breakpoints[1]) {
+      return 'small';
+    } else if (width >= breakpoints[1] && width < breakpoints[2]) {
+      return 'medium';
+    } else {
+      return 'large';
+    }
+  };
+
   render() {
     return (
-      <div style={this.panelStyle}>
-        <Media query="(max-width: 599px)">{matches => matches && this.buildTable('mobile')}</Media>
-
-        <Media query="( min-width: 600px ) and ( max-width: 1499px )">
-          {matches => matches && this.buildTable('small')}
-        </Media>
-
-        <Media query="( min-width: 1500px ) and ( max-width: 1999px )">
-          {matches => matches && this.buildTable('medium')}
-        </Media>
-
-        <Media query="( min-width: 2000px )">{matches => matches && this.buildTable('large')}</Media>
-      </div>
+      <ResizeDetector
+        handleWidth
+        render={({width}) => {
+          this.size = this.getSize(width);
+          const mobile = this.size === 'mobile';
+          return (
+            <div className="p-grid" style={this.size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
+              <YesNoDialog
+                ref={this.confirmDialog}
+                header="Delete"
+                message="Are you sure you want to delete the selected items?"
+                callBack={this.deleteSelected}
+              ></YesNoDialog>
+              <div className="p-col" style={{flexBasis: '400px'}}>
+                {!mobile && this.props.useOverlay && (
+                  <OverlayPanel style={this.centerStyle} ref={el => (this.overlayPanel = el)}>
+                    <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
+                  </OverlayPanel>
+                )}
+                {mobile && this.state.selected.length === 0 && this.buildSearchHeader()}
+                {mobile && this.state.selected.length > 0 && this.buildSelectionHeader()}
+                {!mobile && this.buildSearchHeader()}
+                <DataTable
+                  className={mobile ? 'no-table-header' : ''}
+                  value={this.state.data}
+                  resizableColumns={!mobile}
+                  reorderableColumns={!mobile}
+                  metaKeySelection={false}
+                  selection={this.state.selected}
+                  onSelectionChange={e => this.updateSelectedAndUrl(e.value)}
+                  scrollable={true}
+                  scrollHeight={mobile ? 'calc(100vh - 70px)' : 'calc(100vh - 125px)'}
+                  onRowClick={e => {
+                    let newQuery = queryString.parse(this.props.location.search);
+                    if (e.data === this.state.detailItem) {
+                      this.setState({detailItem: null}); // toggle it if already selected
+                      if (this.props.useOverlay) {
+                        this.overlayPanel.hide();
+                      }
+                      delete newQuery.detail;
+                    } else {
+                      this.setState({detailItem: e.data});
+                      if (this.props.useOverlay) {
+                        this.overlayPanel.show(e);
+                      }
+                      newQuery.detail = e.data.id;
+                    }
+                    this.props.history.replace({
+                      search: queryString.stringify(newQuery, {encode: false}),
+                    });
+                  }}
+                  rowClassName={this.rowClassName}
+                >
+                  {this.buildColumnModel(this.size)}
+                </DataTable>
+              </div>
+              {this.state.detailItem && !mobile && !this.props.useOverlay && (
+                <div className="p-col" style={{flexBasis: '500px', minWidth: '400px', maxWidth: '600px'}}>
+                  <DeviceDetails itemData={this.state.detailItem} onClose={this.clearDetails} />
+                </div>
+              )}
+            </div>
+          );
+        }}
+      />
     );
   }
 
   updateSelectedAndUrl = selected => {
-    this.setState({ selected: selected });
+    this.setState({selected: selected});
     let newQuery = queryString.parse(this.props.location.search);
     const selectedIds = this.buildIdList(selected);
     if (selectedIds) {
@@ -447,7 +451,7 @@ class MasterDetail extends Component {
       delete newQuery.selected;
     }
     this.props.history.replace({
-      search: queryString.stringify(newQuery, { encode: false }),
+      search: queryString.stringify(newQuery, {encode: false}),
     });
   };
 
@@ -479,7 +483,7 @@ class MasterDetail extends Component {
   };
 
   clearDetails = () => {
-    this.setState({ detailItem: null });
+    this.setState({detailItem: null});
     if (this.props.useOverlay) {
       this.overlayPanel.hide();
     }
@@ -489,7 +493,7 @@ class MasterDetail extends Component {
     let filtered = this.state.data.filter(item => {
       return this.state.selected.includes(item) === false;
     });
-    this.setState({ data: filtered });
+    this.setState({data: filtered});
     this.confirmDialog.current.setVisible(false);
   };
 
@@ -557,10 +561,10 @@ class MasterDetail extends Component {
   // Other options involve installing libraries like lodash wich seems overkill.
   debounce = (func, wait) => {
     let timeout;
-    return function () {
+    return function() {
       const context = this;
       const args = arguments;
-      const later = function () {
+      const later = function() {
         timeout = null;
         func.apply(context, args);
       };

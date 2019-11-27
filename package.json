@@ -11,8 +11,8 @@
     "primereact": "^3.3.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-media": "^1.10.0",
     "react-moment": "^0.9.6",
+    "react-resize-detector": "^4.2.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-transition-group": "^4.3.0"
