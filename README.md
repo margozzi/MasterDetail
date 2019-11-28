@@ -1,3 +1,9 @@
+## Description
+
+A Responsive Master Detail Component built with React. Renders like GMail on a phone and like a table in larger diaplys.
+Three breakpoints can be set. The number of table columns to display can be set for each breakpoint. The component uses
+PrimeReact's DataTable.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
