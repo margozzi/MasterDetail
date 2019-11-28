@@ -9,7 +9,6 @@ import queryString from 'query-string';
 import React, {Component} from 'react';
 import ResizeDetector from 'react-resize-detector';
 import {withRouter} from 'react-router-dom';
-import ColumnFormatter from '../../services/ColumnFormatter';
 import DeviceDetails from '../DeviceDetail/DeviceDetails';
 import SelectionButton from '../SelectionButton/SelectionButton';
 import Summary from '../Summary/Summary';
@@ -91,11 +90,7 @@ class MasterDetail extends Component {
     },
   };
 
-  panelStyle = {
-    padding: '10px',
-  };
-
-  centerStyle = {
+  overlayStyle = {
     width: '550px',
     height: '550px',
     maxHeight: '80vh',
@@ -108,34 +103,11 @@ class MasterDetail extends Component {
     right: 0,
   };
 
-  columnModel = [
-    {field: 'user', header: 'User', width: 140},
-    {field: 'mac', header: 'MAC Address', width: 140},
-    {field: 'name', header: 'Name', width: 200},
-    {field: 'role', header: 'Role', width: 80},
-    {field: 'manufacturer', header: 'Manufacturer', width: 120},
-    {field: 'type', header: 'Type', width: 130},
-    {field: 'model', header: 'Model', width: 80},
-    {field: 'status', header: 'Status', width: 70},
-    {field: 'credentials', header: 'Credentials', width: 110},
-    {field: 'enabled', header: 'Enabled', width: 80, formatter: new ColumnFormatter({field: 'enabled'}).yesNoTemplate},
-    {field: 'active', header: 'Active', width: 80, formatter: new ColumnFormatter({field: 'active'}).yesNoTemplate},
-    {field: 'added', header: 'Added', width: 100, formatter: new ColumnFormatter({field: 'added'}).dateShortTemplate},
-    {
-      field: 'expires',
-      header: 'Cert Expires',
-      width: 100,
-      formatter: new ColumnFormatter({field: 'expires'}).dateFromNowTemplate,
-    },
-  ];
-
   constructor(props) {
     super(props);
-    this.deviceLabel = React.createRef();
+    this.label = React.createRef();
     this.confirmDialog = React.createRef();
     this.state = {
-      breakpoints: [600, 1500, 2000],
-      breakpointColumns: [3, 7, 12],
       selected: [],
       data: [],
       totalRecords: 0,
@@ -147,7 +119,7 @@ class MasterDetail extends Component {
     this.onSummarySelection = this.onSummarySelection.bind(this);
     this.load = this.load.bind(this);
     this.rowClassName = this.rowClassName.bind(this);
-    this.toggleDeviceLabel = this.toggleDeviceLabel.bind(this);
+    this.toggleLabel = this.toggleLabel.bind(this);
     this.debounce = this.debounce.bind(this);
     this.deleteSelected = this.deleteSelected.bind(this);
   }
@@ -227,15 +199,15 @@ class MasterDetail extends Component {
   buildSearchHeader = () => {
     return (
       <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
-        <div ref={this.deviceLabel} className="p-col-fixed" style={{fontSize: '24px', marginRight: '20px'}}>
-          Devices
+        <div ref={this.label} className="p-col-fixed" style={{fontSize: '24px', marginRight: '20px'}}>
+          {this.props.label}
         </div>
         <div className="p-inputgroup p-col">
           <InputText
-            onFocus={this.size === 'mobile' ? this.toggleDeviceLabel : () => {}}
-            onBlur={this.size === 'mobile' ? this.toggleDeviceLabel : () => {}}
+            onFocus={this.size === 'mobile' ? this.toggleLabel : () => {}}
+            onBlur={this.size === 'mobile' ? this.toggleLabel : () => {}}
             style={{width: '100%'}}
-            placeholder="Search Devices"
+            placeholder="Search"
             value={this.state.searchString}
             onChange={e => {
               this.setState({searchString: e.target.value});
@@ -263,9 +235,9 @@ class MasterDetail extends Component {
     );
   };
 
-  toggleDeviceLabel = () => {
-    if (this.deviceLabel.current) {
-      this.deviceLabel.current.hidden = !this.deviceLabel.current.hidden;
+  toggleLabel = () => {
+    if (this.label.current) {
+      this.label.current.hidden = !this.label.current.hidden;
     }
   };
 
@@ -297,14 +269,14 @@ class MasterDetail extends Component {
       case 'mobile':
         return <Column body={this.deviceTemplate} />;
       case 'large':
-        model = this.columnModel;
+        model = this.props.columnModel;
         break;
       case 'medium':
-        model = this.columnModel.slice(0, this.state.breakpointColumns[1]);
+        model = this.props.columnModel.slice(0, this.props.breakpointColumns[1]);
         break;
       case 'small':
       default:
-        model = this.columnModel.slice(0, this.state.breakpointColumns[0]);
+        model = this.props.columnModel.slice(0, this.props.breakpointColumns[0]);
     }
 
     var cm = model.map(item => (
@@ -352,7 +324,7 @@ class MasterDetail extends Component {
   }
 
   getSize = width => {
-    const breakpoints = this.state.breakpoints;
+    const breakpoints = this.props.breakpoints;
     if (width < breakpoints[0]) {
       return 'mobile';
     } else if (width >= breakpoints[0] && width < breakpoints[1]) {
@@ -381,7 +353,7 @@ class MasterDetail extends Component {
               ></YesNoDialog>
               <div className="p-col" style={{margin: '10px', flexBasis: '400px'}}>
                 {!mobile && this.props.useOverlay && (
-                  <OverlayPanel style={this.centerStyle} ref={el => (this.overlayPanel = el)}>
+                  <OverlayPanel style={this.overlayStyle} ref={el => (this.overlayPanel = el)}>
                     <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
                   </OverlayPanel>
                 )}
@@ -587,8 +559,16 @@ class MasterDetail extends Component {
 export default withRouter(MasterDetail);
 
 MasterDetail.propTypes = {
+  /** The label to be used to identify the array of data */
+  label: PropTypes.string.isRequired,
   /** An array of data that will be used in the master table and the details panel */
   data: PropTypes.array.isRequired,
+  /** Column Model to be used on the PrimeReact DataTable */
+  columnModel: PropTypes.array.isRequired,
+  /** Widths at which the table should respond */
+  breakpoints: PropTypes.array,
+  /** Number of columns to show at each breakpoint width */
+  breakpointColumns: PropTypes.array,
   /** Use an overlay panel to show detail, else inline. Defaults to false */
   useOverlay: PropTypes.bool,
 };

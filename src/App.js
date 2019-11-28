@@ -1,38 +1,89 @@
 import React, {Component, Suspense, lazy} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-// Prime React related 
+// Prime React related
 import {ProgressSpinner} from 'primereact/progressspinner';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
+import ColumnFormatter from './services/ColumnFormatter';
 
 import './App.css';
 
-class App extends Component {   
-
+class App extends Component {
   render() {
     const MasterDetail = lazy(() => import('./components/MasterDetail/MasterDetail'));
     const DeviceDetails = lazy(() => import('./components/DeviceDetail/DeviceDetails'));
     const NotFound = lazy(() => import('./components/NotFound'));
 
     return (
-        <div>
-          <BrowserRouter>
-            <Suspense fallback={<ProgressSpinner/>}>
-              <Switch>
-                <Route exact path="/" render={props => <MasterDetail data={this.fakeDeviceData} />} />
-                <Route exact path="/devices" render={props => <MasterDetail data={this.fakeDeviceData} />} />
-                <Route path="/devices/:id" render={props => <DeviceDetails itemData={this.fakeDeviceData[props.match.params.id]} />} />
-                {/* when none of the above match */}
-                <Route component={NotFound} />
-              </Switch>
-            </Suspense>
-            </BrowserRouter>
-        </div>
-
+      <div>
+        <BrowserRouter>
+          <Suspense fallback={<ProgressSpinner />}>
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <MasterDetail
+                    label="Devices"
+                    breakpoints={this.breakpoints}
+                    breakpointColumns={this.breakpointColumns}
+                    columnModel={this.columnModel}
+                    data={this.fakeDeviceData}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/devices"
+                render={props => (
+                  <MasterDetail
+                    label="Devices"
+                    breakpoints={this.breakpoints}
+                    breakpointColumns={this.breakpointColumns}
+                    columnModel={this.columnModel}
+                    data={this.fakeDeviceData}
+                  />
+                )}
+              />
+              <Route
+                path="/devices/:id"
+                render={props => <DeviceDetails itemData={this.fakeDeviceData[props.match.params.id]} />}
+              />
+              {/* when none of the above match */}
+              <Route component={NotFound} />
+            </Switch>
+          </Suspense>
+        </BrowserRouter>
+      </div>
     );
   }
+
+  breakpoints = [600, 1000, 1500];
+
+  breakpointColumns = [3, 7, 12];
+
+  columnModel = [
+    {field: 'user', header: 'User', width: 140},
+    {field: 'mac', header: 'MAC Address', width: 140},
+    {field: 'name', header: 'Name', width: 200},
+    {field: 'role', header: 'Role', width: 80},
+    {field: 'manufacturer', header: 'Manufacturer', width: 120},
+    {field: 'type', header: 'Type', width: 130},
+    {field: 'model', header: 'Model', width: 80},
+    {field: 'status', header: 'Status', width: 70},
+    {field: 'credentials', header: 'Credentials', width: 110},
+    {field: 'enabled', header: 'Enabled', width: 80, formatter: new ColumnFormatter({field: 'enabled'}).yesNoTemplate},
+    {field: 'active', header: 'Active', width: 80, formatter: new ColumnFormatter({field: 'active'}).yesNoTemplate},
+    {field: 'added', header: 'Added', width: 100, formatter: new ColumnFormatter({field: 'added'}).dateShortTemplate},
+    {
+      field: 'expires',
+      header: 'Cert Expires',
+      width: 100,
+      formatter: new ColumnFormatter({field: 'expires'}).dateFromNowTemplate,
+    },
+  ];
 
   fakeDeviceData = [
     {
