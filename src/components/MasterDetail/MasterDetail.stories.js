@@ -6,7 +6,7 @@ import {HashRouter} from 'react-router-dom';
 var data = [
   {
     id: 1,
-    user: 'Mike Margozzi',
+    user: 'Fred Flintstone',
     role: 'student',
     manufacturer: 'Samsung',
     type: 'Galaxy',
@@ -22,7 +22,7 @@ var data = [
   },
   {
     id: 2,
-    user: 'Mike Margozzi',
+    user: 'Fred Flintstone',
     role: 'student',
     manufacturer: 'Apple',
     type: 'iPhone',
@@ -38,7 +38,7 @@ var data = [
   },
   {
     id: 3,
-    user: 'Mike Margozzi',
+    user: 'Fred Flintstone',
     role: 'student',
     manufacturer: 'Roku',
     type: 'Streaming Stick',
@@ -54,7 +54,7 @@ var data = [
   },
   {
     id: 4,
-    user: 'Craig Stone',
+    user: 'Barney Rubble',
     role: 'faculty',
     manufacturer: 'Roku',
     type: 'Streaming Stick',
@@ -70,7 +70,7 @@ var data = [
   },
   {
     id: 5,
-    user: 'Craig Stone',
+    user: 'Barney Rubble',
     role: 'faculty',
     manufacturer: 'Apple',
     type: 'iPhone',

@@ -47,46 +47,34 @@ class MasterDetail extends Component {
   disableMenuItem = {
     label: 'Disable',
     command: () => {
-      var clone = [...this.state.data];
-      this.state.selected.forEach(item => {
-        for (var i = 0; i < clone.length; i++) {
-          if (clone[i].id === item.id) {
-            item.enabled = false;
-            break;
-          }
-        }
-      });
-      this.setState({data: clone});
+      this.setEnabledState(false);
     },
   };
 
   enableMenuItem = {
     label: 'Enable',
     command: () => {
-      var clone = [...this.state.data];
-      this.state.selected.forEach(item => {
-        for (var i = 0; i < clone.length; i++) {
-          if (clone[i].id === item.id) {
-            item.enabled = true;
-            break;
-          }
-        }
-      });
-      this.setState({data: clone});
+      this.setEnabledState(true);
     },
+  };
+
+  setEnabledState = state => {
+    var clone = [...this.state.data];
+    this.state.selected.forEach(item => {
+      for (var i = 0; i < clone.length; i++) {
+        if (clone[i].id === item.id) {
+          item.enabled = state;
+          break;
+        }
+      }
+    });
+    this.setState({data: clone});
   };
 
   deleteMenuItem = {
     label: 'Delete',
     command: () => {
       this.confirmDialog.current.setVisible(true);
-    },
-  };
-
-  revokeMenuItem = {
-    label: 'Revoke Certificate',
-    command: () => {
-      //TODO
     },
   };
 
@@ -181,16 +169,12 @@ class MasterDetail extends Component {
       // Dynamic menu items
       let enabledCount = 0;
       let disabledCount = 0;
-      let certCount = 0;
-      let pskCount = 0;
 
       this.state.selected.forEach(item => {
         item.enabled ? enabledCount++ : disabledCount++;
-        item.credentials === 'certificate' ? certCount++ : pskCount++;
       });
       if (enabledCount > 0) actions.items.push(this.disableMenuItem);
       if (disabledCount > 0) actions.items.push(this.enableMenuItem);
-      if (certCount > 0) actions.items.push(this.revokeMenuItem);
       actions.items.push(this.deleteMenuItem);
     }
     return menuItems;

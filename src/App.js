@@ -86,7 +86,7 @@ class App extends Component {
   fakeDeviceData = [
     {
       id: 0,
-      user: 'Mike Margozzi',
+      user: 'Fred Flintstone',
       role: 'student',
       manufacturer: 'Samsung',
       type: 'Galaxy',
@@ -102,7 +102,7 @@ class App extends Component {
     },
     {
       id: 1,
-      user: 'Mike Margozzi',
+      user: 'Fred Flintstone',
       role: 'student',
       manufacturer: 'Apple',
       type: 'iPhone',
@@ -118,7 +118,7 @@ class App extends Component {
     },
     {
       id: 2,
-      user: 'Mike Margozzi',
+      user: 'Fred Flintstone',
       role: 'student',
       manufacturer: 'Roku',
       type: 'Streaming Stick',
@@ -134,7 +134,7 @@ class App extends Component {
     },
     {
       id: 3,
-      user: 'Craig Stone',
+      user: 'Barney Rubble',
       role: 'faculty',
       manufacturer: 'Roku',
       type: 'Streaming Stick',
@@ -150,7 +150,7 @@ class App extends Component {
     },
     {
       id: 4,
-      user: 'Craig Stone',
+      user: 'Barney Rubble',
       role: 'faculty',
       manufacturer: 'Apple',
       type: 'iPhone',
