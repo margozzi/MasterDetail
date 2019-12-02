@@ -8,8 +8,6 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import ColumnFormatter from './services/ColumnFormatter';
 
-import './App.css';
-
 class App extends Component {
   render() {
     const MasterDetail = lazy(() => import('./components/MasterDetail/MasterDetail'));

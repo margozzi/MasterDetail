@@ -374,13 +374,13 @@ class MasterDetail extends Component {
                     let newQuery = queryString.parse(this.props.location.search);
                     if (e.data === this.state.detailItem) {
                       this.setState({detailItem: null}); // toggle it if already selected
-                      if (this.props.useOverlay) {
+                      if (this.overlayPanel) {
                         this.overlayPanel.hide();
                       }
                       delete newQuery.detail;
                     } else {
                       this.setState({detailItem: e.data});
-                      if (this.props.useOverlay) {
+                      if (this.overlayPanel) {
                         this.overlayPanel.show(e);
                       }
                       newQuery.detail = e.data.id;
@@ -571,4 +571,10 @@ MasterDetail.propTypes = {
   breakpointColumns: PropTypes.array,
   /** Use an overlay panel to show detail, else inline. Defaults to false */
   useOverlay: PropTypes.bool,
+};
+
+MasterDetail.defaultProps = {
+  breakpoints: [480, 839, 1024],
+  breakpointColumns: [3, 6, 9],
+  useOverlay: true,
 };
