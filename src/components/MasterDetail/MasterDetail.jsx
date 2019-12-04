@@ -235,7 +235,11 @@ class MasterDetail extends Component {
         <div className="p-col" style={{width: '100%'}}>
           &nbsp;
         </div>
-        <Button className="p-col-fixed" icon="pi pi-trash" />
+        <Button
+          className="p-col-fixed"
+          icon="pi pi-trash"
+          onClick={event => this.confirmDialog.current.setVisible(true)}
+        />
         <Menu model={this.buildMenu()} popup={true} ref={el => (this.menu = el)} />
         <Button
           className="p-col-fixed"
@@ -334,6 +338,7 @@ class MasterDetail extends Component {
                 header="Delete"
                 message="Are you sure you want to delete the selected items?"
                 callBack={this.deleteSelected}
+                maxWidth="370px"
               ></YesNoDialog>
               <div className="p-col" style={{margin: '10px', flexBasis: '400px'}}>
                 {!mobile && this.props.useOverlay && (

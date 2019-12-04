@@ -23,7 +23,7 @@ class YesNoDialog extends Component {
       <Dialog
         header={this.props.header}
         visible={this.state.visible}
-        style={{width: '50vw'}}
+        style={{width: '80vw', maxWidth: this.props.maxWidth}}
         footer={footer}
         onHide={e => {
           this.setVisible(false);
@@ -56,10 +56,15 @@ YesNoDialog.propTypes = {
   /** Display the dialog or not */
   visible: PropTypes.bool.isRequired,
   /** Make the dialog modal. Defaults to true */
-  model: PropTypes.bool,
+  modal: PropTypes.bool,
+  /** Size for mobile, else desktop */
+  mobile: PropTypes.bool,
+  /** The widest the dialog should be allowed to grow. */
+  maxWidth: PropTypes.string,
 };
 
 YesNoDialog.defaultProps = {
-  model: true,
+  modal: true,
   visible: false,
+  maxWidth: '600px',
 };
