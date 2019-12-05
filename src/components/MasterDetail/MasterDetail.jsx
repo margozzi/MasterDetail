@@ -14,6 +14,7 @@ import SelectionButton from '../SelectionButton/SelectionButton';
 import Summary from '../Summary/Summary';
 import './MasterDetail.css';
 import YesNoDialog from '../YesNoDialog/YesNoDialog';
+import SearchHeader from '../SearchHeader/SearchHeader';
 
 class MasterDetail extends Component {
   // Holds the current size of the component
@@ -180,43 +181,18 @@ class MasterDetail extends Component {
     return menuItems;
   };
 
-  buildSearchHeader = () => {
-    return (
-      <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
-        <div ref={this.label} className="p-col-fixed" style={{fontSize: '24px', marginRight: '20px'}}>
-          {this.props.label}
-        </div>
-        <div className="p-inputgroup p-col">
-          <InputText
-            onFocus={this.size === 'mobile' ? this.toggleLabel : () => {}}
-            onBlur={this.size === 'mobile' ? this.toggleLabel : () => {}}
-            style={{width: '100%'}}
-            placeholder="Search"
-            value={this.state.searchString}
-            onChange={e => {
-              this.setState({searchString: e.target.value});
-              let newQuery = queryString.parse(this.props.location.search);
-              if (e.target.value === '') {
-                delete newQuery.search;
-              } else {
-                newQuery.search = e.target.value;
-              }
-              this.props.history.replace({
-                search: queryString.stringify(newQuery, {encode: false}),
-              });
-              this.search(e.target.value);
-            }}
-          />
-        </div>
-        <Menu model={this.buildMenu()} popup={true} ref={el => (this.menu = el)} />
-        <Button
-          className="p-col-fixed"
-          icon="pi pi-bars"
-          style={{marginLeft: '20px'}}
-          onClick={event => this.menu.toggle(event)}
-        />
-      </div>
-    );
+  onSearch = searchString => {
+    this.setState({searchString: searchString});
+    let newQuery = queryString.parse(this.props.location.search);
+    if (searchString === '') {
+      delete newQuery.search;
+    } else {
+      newQuery.search = searchString;
+    }
+    this.props.history.replace({
+      search: queryString.stringify(newQuery, {encode: false}),
+    });
+    this.search(searchString);
   };
 
   toggleLabel = () => {
@@ -346,9 +322,22 @@ class MasterDetail extends Component {
                     <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
                   </OverlayPanel>
                 )}
-                {mobile && this.state.selected.length === 0 && this.buildSearchHeader()}
+                {mobile && this.state.selected.length === 0 && (
+                  <SearchHeader
+                    label="Devices"
+                    searchString={this.setState.searchString}
+                    searchCallback={this.onSearch}
+                    hideLabel={true}
+                  ></SearchHeader>
+                )}
                 {mobile && this.state.selected.length > 0 && this.buildSelectionHeader()}
-                {!mobile && this.buildSearchHeader()}
+                {!mobile && (
+                  <SearchHeader
+                    label="Devices"
+                    searchString={this.setState.searchString}
+                    searchCallback={this.onSearch}
+                  ></SearchHeader>
+                )}
                 <DataTable
                   className={mobile ? 'no-table-header' : ''}
                   value={this.state.data}
