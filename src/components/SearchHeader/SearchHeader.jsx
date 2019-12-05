@@ -1,7 +1,8 @@
 import {InputText} from 'primereact/inputtext';
+import {Button} from 'primereact/button';
+import {Menu} from 'primereact/menu';
 import {PropTypes} from 'prop-types';
 import React, {Component} from 'react';
-import ResizeDetector from 'react-resize-detector';
 
 class SearchHeader extends Component {
   constructor(props) {
@@ -23,33 +24,37 @@ class SearchHeader extends Component {
 
   render() {
     return (
-      <ResizeDetector
-        handleWidth
-        render={({width}) => {
-          return (
-            <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
-              {this.props.label && (
-                <div ref={this.label} className="p-col-fixed" style={{fontSize: '24px', marginRight: '20px'}}>
-                  {this.props.label}
-                </div>
-              )}
-              <div className="p-inputgroup p-col">
-                <InputText
-                  onFocus={this.props.hideLabel ? this.toggleLabel : () => {}}
-                  onBlur={this.props.hideLabel ? this.toggleLabel : () => {}}
-                  style={{width: '100%'}}
-                  placeholder="Search"
-                  value={this.state.searchString}
-                  onChange={e => {
-                    this.setState({searchString: e.target.value});
-                    this.search(e.target.value);
-                  }}
-                />
-              </div>
-            </div>
-          );
-        }}
-      />
+      <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
+        {this.props.label && (
+          <div ref={this.label} className="p-col-fixed" style={{fontSize: '24px', marginRight: '20px'}}>
+            {this.props.label}
+          </div>
+        )}
+        <div className="p-inputgroup p-col">
+          <InputText
+            onFocus={this.props.hideLabel ? this.toggleLabel : () => {}}
+            onBlur={this.props.hideLabel ? this.toggleLabel : () => {}}
+            style={{width: '100%'}}
+            placeholder="Search"
+            value={this.state.searchString}
+            onChange={e => {
+              this.setState({searchString: e.target.value});
+              this.search(e.target.value);
+            }}
+          />
+        </div>
+        {this.props.menuModel && (
+          <>
+            <Menu model={this.props.menuModel} popup={true} ref={el => (this.menu = el)} />
+            <Button
+              className="p-col-fixed"
+              icon="pi pi-bars"
+              style={{marginLeft: '27px'}}
+              onClick={event => this.menu.toggle(event)}
+            />
+          </>
+        )}
+      </div>
     );
   }
 
@@ -87,6 +92,8 @@ SearchHeader.propTypes = {
   debounceTime: PropTypes.number,
   /** Search callback. The funtion to call when the search field has changed and no firther changes within the debounce time. */
   searchCallback: PropTypes.func.isRequired,
+  /** Supply a menu model if you want to display a menu at the far right of the header. */
+  menuModel: PropTypes.array,
 };
 
 SearchHeader.defaultProps = {
