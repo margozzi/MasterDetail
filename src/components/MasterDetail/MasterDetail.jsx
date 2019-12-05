@@ -1,8 +1,5 @@
-import {Button} from 'primereact/button';
 import {Column} from 'primereact/column';
 import {DataTable} from 'primereact/datatable';
-import {InputText} from 'primereact/inputtext';
-import {Menu} from 'primereact/menu';
 import {OverlayPanel} from 'primereact/overlaypanel';
 import {PropTypes} from 'prop-types';
 import queryString from 'query-string';
@@ -15,6 +12,7 @@ import Summary from '../Summary/Summary';
 import './MasterDetail.css';
 import YesNoDialog from '../YesNoDialog/YesNoDialog';
 import SearchHeader from '../SearchHeader/SearchHeader';
+import SelectionHeader from '../SelectionHeader/SelectionHeader';
 
 class MasterDetail extends Component {
   // Holds the current size of the component
@@ -201,32 +199,6 @@ class MasterDetail extends Component {
     }
   };
 
-  buildSelectionHeader = () => {
-    return (
-      <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
-        <Button className="p-col-fixed" icon="pi pi-chevron-left" onClick={this.clearSelection} />
-        <div className="p-col-fixed" style={{fontSize: '18px', marginLeft: '20px'}}>
-          {this.state.selected.length}
-        </div>
-        <div className="p-col" style={{width: '100%'}}>
-          &nbsp;
-        </div>
-        <Button
-          className="p-col-fixed"
-          icon="pi pi-trash"
-          onClick={event => this.confirmDialog.current.setVisible(true)}
-        />
-        <Menu model={this.buildMenu()} popup={true} ref={el => (this.menu = el)} />
-        <Button
-          className="p-col-fixed"
-          icon="pi pi-bars"
-          style={{marginLeft: '27px'}}
-          onClick={event => this.menu.toggle(event)}
-        />
-      </div>
-    );
-  };
-
   buildColumnModel = () => {
     var model;
     switch (this.size) {
@@ -330,7 +302,14 @@ class MasterDetail extends Component {
                     hideLabel={true}
                   ></SearchHeader>
                 )}
-                {mobile && this.state.selected.length > 0 && this.buildSelectionHeader()}
+                {mobile && this.state.selected.length > 0 && (
+                  <SelectionHeader
+                    clearCallback={this.clearSelection}
+                    deleteCallback={() => this.confirmDialog.current.setVisible(true)}
+                    selectedCount={this.state.selected.length}
+                    menuModel={this.buildMenu()}
+                  ></SelectionHeader>
+                )}
                 {!mobile && (
                   <SearchHeader
                     label="Devices"
