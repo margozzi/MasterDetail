@@ -1,5 +1,3 @@
-import {Column} from 'primereact/column';
-import {DataTable} from 'primereact/datatable';
 import {OverlayPanel} from 'primereact/overlaypanel';
 import {PropTypes} from 'prop-types';
 import queryString from 'query-string';
@@ -7,12 +5,11 @@ import React, {Component} from 'react';
 import ResizeDetector from 'react-resize-detector';
 import {withRouter} from 'react-router-dom';
 import DeviceDetails from '../DeviceDetail/DeviceDetails';
-import SelectionButton from '../SelectionButton/SelectionButton';
-import Summary from '../Summary/Summary';
-import './MasterDetail.css';
 import YesNoDialog from '../YesNoDialog/YesNoDialog';
 import SearchHeader from '../SearchHeader/SearchHeader';
 import SelectionHeader from '../SelectionHeader/SelectionHeader';
+import ResponsiveTable from './../ResponsiveTable/ResponsiveTable';
+import './MasterDetail.css';
 
 class MasterDetail extends Component {
   // Holds the current size of the component
@@ -96,19 +93,15 @@ class MasterDetail extends Component {
     this.confirmDialog = React.createRef();
     this.state = {
       selected: [],
-      data: [],
-      totalRecords: 0,
+      data: this.props.data,
+      totalRecords: this.props.data.length,
       detailItem: null,
       searchString: '',
     };
-
-    this.deviceTemplate = this.deviceTemplate.bind(this);
+    this.onRowClicked = this.onRowClicked.bind(this);
     this.onSummarySelection = this.onSummarySelection.bind(this);
-    this.load = this.load.bind(this);
-    this.rowClassName = this.rowClassName.bind(this);
-    this.toggleLabel = this.toggleLabel.bind(this);
-    this.debounce = this.debounce.bind(this);
     this.deleteSelected = this.deleteSelected.bind(this);
+    this.updateSelectedAndUrl = this.updateSelectedAndUrl.bind(this);
   }
 
   getInitialSelection = data => {
@@ -193,62 +186,6 @@ class MasterDetail extends Component {
     this.search(searchString);
   };
 
-  toggleLabel = () => {
-    if (this.label.current) {
-      this.label.current.hidden = !this.label.current.hidden;
-    }
-  };
-
-  buildColumnModel = () => {
-    var model;
-    switch (this.size) {
-      case 'mobile':
-        return <Column body={this.deviceTemplate} />;
-      case 'large':
-        model = this.props.columnModel;
-        break;
-      case 'medium':
-        model = this.props.columnModel.slice(0, this.props.breakpointColumns[1]);
-        break;
-      case 'small':
-      default:
-        model = this.props.columnModel.slice(0, this.props.breakpointColumns[0]);
-    }
-
-    var cm = model.map(item => (
-      <Column
-        field={item.field}
-        header={item.header}
-        loadingBody={this.loadingText}
-        style={{width: item.width + 'px'}}
-        body={item.formatter}
-        key={Number(item.id).toString()}
-      />
-    ));
-
-    cm.unshift(
-      <Column
-        header={<SelectionButton initials=" " bgColor="transparent" onClick={this.changeAll} />}
-        body={this.buttonTemplate}
-        style={{minWidth: '60px', width: '60px'}}
-        key={'selectAll'}
-      />
-    );
-    return cm;
-  };
-
-  rowClassName = item => {
-    return {'p-highlight': this.isSelected(item), 'detail-highlight': this.isDetailItem(item)};
-  };
-
-  isSelected = item => {
-    return this.state.selected.includes(item) && !this.isDetailItem(item);
-  };
-
-  isDetailItem = item => {
-    return item === this.state.detailItem;
-  };
-
   componentDidMount() {
     // Temporary code
     this.search(this.getInitialSearch());
@@ -300,6 +237,7 @@ class MasterDetail extends Component {
                     searchString={this.setState.searchString}
                     searchCallback={this.onSearch}
                     hideLabel={true}
+                    menuModel={this.buildMenu()}
                   ></SearchHeader>
                 )}
                 {mobile && this.state.selected.length > 0 && (
@@ -315,41 +253,21 @@ class MasterDetail extends Component {
                     label="Devices"
                     searchString={this.setState.searchString}
                     searchCallback={this.onSearch}
+                    menuModel={this.buildMenu()}
                   ></SearchHeader>
                 )}
-                <DataTable
-                  className={mobile ? 'no-table-header' : ''}
-                  value={this.state.data}
-                  resizableColumns={!mobile}
-                  reorderableColumns={!mobile}
-                  metaKeySelection={false}
-                  selection={this.state.selected}
-                  onSelectionChange={e => this.updateSelectedAndUrl(e.value)}
-                  scrollable={true}
-                  scrollHeight={mobile ? 'calc(100vh - 70px)' : 'calc(100vh - 125px)'}
-                  onRowClick={e => {
-                    let newQuery = queryString.parse(this.props.location.search);
-                    if (e.data === this.state.detailItem) {
-                      this.setState({detailItem: null}); // toggle it if already selected
-                      if (this.overlayPanel) {
-                        this.overlayPanel.hide();
-                      }
-                      delete newQuery.detail;
-                    } else {
-                      this.setState({detailItem: e.data});
-                      if (this.overlayPanel) {
-                        this.overlayPanel.show(e);
-                      }
-                      newQuery.detail = e.data.id;
-                    }
-                    this.props.history.replace({
-                      search: queryString.stringify(newQuery, {encode: false}),
-                    });
-                  }}
-                  rowClassName={this.rowClassName}
-                >
-                  {this.buildColumnModel(this.size)}
-                </DataTable>
+                <ResponsiveTable
+                  data={this.state.data}
+                  line1Field="user"
+                  line2Field="mac"
+                  line3Field="name"
+                  columnModel={this.props.columnModel}
+                  breakpoints={this.props.breakpoints}
+                  breakpointColumns={this.props.breakpointColumns}
+                  selected={this.state.selected}
+                  selectionChangeCallback={this.updateSelectedAndUrl}
+                  rowClickCallback={this.onRowClicked}
+                ></ResponsiveTable>
               </div>
               {this.state.detailItem && !mobile && !this.props.useOverlay && (
                 <div className="p-col" style={{flexBasis: '500px', minWidth: '400px', maxWidth: '600px'}}>
@@ -362,6 +280,26 @@ class MasterDetail extends Component {
       />
     );
   }
+
+  onRowClicked = e => {
+    let newQuery = queryString.parse(this.props.location.search);
+    if (e.data === this.state.detailItem) {
+      this.setState({detailItem: null}); // toggle it if already selected
+      if (this.overlayPanel) {
+        this.overlayPanel.hide();
+      }
+      delete newQuery.detail;
+    } else {
+      this.setState({detailItem: e.data});
+      if (this.overlayPanel) {
+        this.overlayPanel.show(e);
+      }
+      newQuery.detail = e.data.id;
+    }
+    this.props.history.replace({
+      search: queryString.stringify(newQuery, {encode: false}),
+    });
+  };
 
   updateSelectedAndUrl = selected => {
     this.setState({selected: selected});
@@ -423,33 +361,6 @@ class MasterDetail extends Component {
     return <span className="loading-text"></span>;
   }
 
-  deviceTemplate = device => {
-    return (
-      <Summary
-        itemData={device}
-        idField="id"
-        line1Field="user"
-        line2Field="mac"
-        line3Field="name"
-        selected={typeof this.state.selected.find(item => item.id === device.id) !== 'undefined'}
-        onSelection={this.onSummarySelection}
-        onShowDetails={this.showDetails}
-      ></Summary>
-    );
-  };
-
-  buttonTemplate = device => {
-    return (
-      <SelectionButton
-        size="medium"
-        nameField="user"
-        itemData={device}
-        selected={this.state.selected.includes(device)}
-        onClick={this.onSummarySelection}
-      />
-    );
-  };
-
   onSummarySelection = (selected, item) => {
     var clone = [...this.state.selected];
     if (selected) {
@@ -468,15 +379,6 @@ class MasterDetail extends Component {
   // Only called for mobile
   showDetails = item => {
     this.props.history.push('/devices/' + item.id);
-  };
-
-  load = event => {
-    //var first = event.first ;
-    //var count = event.rows;
-    this.setState({
-      data: this.props.data,
-      totalRecords: this.props.data.length,
-    });
   };
 
   // Borrowed from here:  https://stackoverflow.com/questions/52561133/how-to-perform-debounce-on-onchange-react-event

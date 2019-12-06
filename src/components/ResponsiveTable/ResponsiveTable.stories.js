@@ -1,8 +1,8 @@
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import MasterDetail from './MasterDetail';
+import {action} from '@storybook/addon-actions';
+import ResponsiveTable from './ResponsiveTable';
 import ColumnFormatter from '../../services/ColumnFormatter';
-import {HashRouter} from 'react-router-dom';
 
 const breakpoints = [600, 1000, 1500];
 
@@ -112,27 +112,17 @@ const fakeDeviceData = [
   },
 ];
 
-storiesOf('MasterDetail', module).add('Inline Details', () => (
-  <HashRouter>
-    <MasterDetail
-      label="Devices"
-      breakpoints={breakpoints}
-      breakpointColumns={breakpointColumns}
-      columnModel={columnModel}
-      data={fakeDeviceData}
-    />
-  </HashRouter>
-));
-
-storiesOf('MasterDetail', module).add('Overlay Details', () => (
-  <HashRouter>
-    <MasterDetail
-      useOverlay={true}
-      label="Devices"
-      breakpoints={breakpoints}
-      breakpointColumns={breakpointColumns}
-      columnModel={columnModel}
-      data={fakeDeviceData}
-    ></MasterDetail>
-  </HashRouter>
+storiesOf('ResponsiveTable', module).add('With Fake Data', () => (
+  <ResponsiveTable
+    breakpoints={breakpoints}
+    breakpointColumns={breakpointColumns}
+    columnModel={columnModel}
+    data={fakeDeviceData}
+    idField="id"
+    line1Field="user"
+    line2Field="mac"
+    line3Field="name"
+    rowClickCallback={action('row clicked')}
+    selectionChangeCallback={action('selection changed')}
+  />
 ));
