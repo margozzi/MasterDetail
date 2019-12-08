@@ -10,15 +10,7 @@ import './ResponsiveTable.css';
 class ResponsiveTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selected: this.props.selected,
-      data: this.props.data,
-      totalRecords: 0,
-      detailItem: null,
-    };
-
     this.onRowSelection = this.onRowSelection.bind(this);
-    this.load = this.load.bind(this);
     this.rowClassName = this.rowClassName.bind(this);
   }
 
@@ -30,9 +22,10 @@ class ResponsiveTable extends Component {
         line1Field={this.props.line1Field}
         line2Field={this.props.line2Field}
         line3Field={this.props.line3Field}
-        selected={typeof this.state.selected.find(selected => selected.id === item.id) !== 'undefined'}
+        selected={typeof this.props.selected.find(selected => selected.id === item.id) !== 'undefined'}
         onSelection={this.onRowSelection}
-        onShowDetails={this.props.rowClickCallback(item)}
+        //onShowDetails={this.onRowClick}
+        onShowDetails={() => {}}
       ></Summary>
     );
   };
@@ -80,11 +73,11 @@ class ResponsiveTable extends Component {
   };
 
   isSelected = item => {
-    return this.state.selected.includes(item) && !this.isDetailItem(item);
+    return this.props.selected.includes(item) && !this.isDetailItem(item);
   };
 
   isDetailItem = item => {
-    return item === this.state.detailItem;
+    return item === this.props.detailItem;
   };
 
   getSize = width => {
@@ -111,11 +104,11 @@ class ResponsiveTable extends Component {
             <div className="p-grid" style={size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
               <DataTable
                 className={mobile ? 'no-table-header' : ''}
-                value={this.state.data}
+                value={this.props.data}
                 resizableColumns={!mobile}
                 reorderableColumns={!mobile}
                 metaKeySelection={false}
-                selection={this.state.selected}
+                selection={this.props.selected}
                 onSelectionChange={e => this.updateSelectedAndUrl(e.value)}
                 scrollable={true}
                 scrollHeight={mobile ? 'calc(100vh - 70px)' : 'calc(100vh - 125px)'}
@@ -133,7 +126,7 @@ class ResponsiveTable extends Component {
 
   changeAll = selected => {
     if (selected) {
-      this.setState({selected: this.state.data});
+      this.setState({selected: this.props.data});
     } else {
       this.setState({selected: []});
     }
@@ -149,14 +142,14 @@ class ResponsiveTable extends Component {
         size="medium"
         nameField="user"
         itemData={item}
-        selected={this.state.selected.includes(item)}
+        selected={this.props.selected.includes(item)}
         onClick={this.onRowSelection}
       />
     );
   };
 
   onRowSelection = (selected, item) => {
-    let clone = [...this.state.selected];
+    let clone = [...this.props.selected];
     if (selected) {
       clone.push(item);
     } else {
@@ -171,13 +164,8 @@ class ResponsiveTable extends Component {
     this.props.selectionChangeCallback(clone);
   };
 
-  onRowClick = e => {
-    if (this.isDetailItem(e.data)) {
-      this.setState({detailItem: null});
-    } else {
-      this.setState({detailItem: e.data});
-    }
-    this.props.rowClickCallback(e);
+  onRowClick = item => {
+    this.props.rowClickCallback(item.data);
   };
 
   load = event => {
@@ -205,6 +193,8 @@ ResponsiveTable.propTypes = {
   line3Field: PropTypes.string,
   /** An array of items that are to be initially selected. Optional */
   selected: PropTypes.array,
+  /** The item that is clicked on, but not selected. We use this to enable shwing details */
+  detailItem: PropTypes.object,
   /** Column Model to be used on the PrimeReact DataTable */
   columnModel: PropTypes.array.isRequired,
   /** Widths at which the table should respond */

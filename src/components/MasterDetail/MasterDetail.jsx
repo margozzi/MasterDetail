@@ -6,9 +6,8 @@ import ResizeDetector from 'react-resize-detector';
 import {withRouter} from 'react-router-dom';
 import DeviceDetails from '../DeviceDetail/DeviceDetails';
 import YesNoDialog from '../YesNoDialog/YesNoDialog';
-import SearchHeader from '../SearchHeader/SearchHeader';
-import SelectionHeader from '../SelectionHeader/SelectionHeader';
-import ResponsiveTable from './../ResponsiveTable/ResponsiveTable';
+import ResponsiveTable from '../ResponsiveTable/ResponsiveTable';
+import ResponsiveHeader from '../ResponsiveHeader/ResponsiveHeader';
 import './MasterDetail.css';
 
 class MasterDetail extends Component {
@@ -102,6 +101,7 @@ class MasterDetail extends Component {
     this.onSummarySelection = this.onSummarySelection.bind(this);
     this.deleteSelected = this.deleteSelected.bind(this);
     this.updateSelectedAndUrl = this.updateSelectedAndUrl.bind(this);
+    this.clearSelection = this.clearSelection.bind(this);
   }
 
   getInitialSelection = data => {
@@ -231,31 +231,16 @@ class MasterDetail extends Component {
                     <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
                   </OverlayPanel>
                 )}
-                {mobile && this.state.selected.length === 0 && (
-                  <SearchHeader
-                    label="Devices"
-                    searchString={this.setState.searchString}
-                    searchCallback={this.onSearch}
-                    hideLabel={true}
-                    menuModel={this.buildMenu()}
-                  ></SearchHeader>
-                )}
-                {mobile && this.state.selected.length > 0 && (
-                  <SelectionHeader
-                    clearCallback={this.clearSelection}
-                    deleteCallback={() => this.confirmDialog.current.setVisible(true)}
-                    selectedCount={this.state.selected.length}
-                    menuModel={this.buildMenu()}
-                  ></SelectionHeader>
-                )}
-                {!mobile && (
-                  <SearchHeader
-                    label="Devices"
-                    searchString={this.setState.searchString}
-                    searchCallback={this.onSearch}
-                    menuModel={this.buildMenu()}
-                  ></SearchHeader>
-                )}
+                <ResponsiveHeader
+                  label="Devices"
+                  searchString={this.state.searchString}
+                  clearCallback={this.clearSelection}
+                  deleteCallback={() => this.confirmDialog.current.setVisible(true)}
+                  selectedCount={this.state.selected.length}
+                  searchCallback={this.onSearch}
+                  mobile={mobile}
+                  menuModel={this.buildMenu()}
+                ></ResponsiveHeader>
                 <ResponsiveTable
                   data={this.state.data}
                   line1Field="user"
@@ -265,6 +250,7 @@ class MasterDetail extends Component {
                   breakpoints={this.props.breakpoints}
                   breakpointColumns={this.props.breakpointColumns}
                   selected={this.state.selected}
+                  detailItem={this.state.detailItem}
                   selectionChangeCallback={this.updateSelectedAndUrl}
                   rowClickCallback={this.onRowClicked}
                 ></ResponsiveTable>
@@ -281,20 +267,20 @@ class MasterDetail extends Component {
     );
   }
 
-  onRowClicked = e => {
+  onRowClicked = item => {
     let newQuery = queryString.parse(this.props.location.search);
-    if (e.data === this.state.detailItem) {
+    if (item === this.state.detailItem) {
       this.setState({detailItem: null}); // toggle it if already selected
       if (this.overlayPanel) {
         this.overlayPanel.hide();
       }
       delete newQuery.detail;
     } else {
-      this.setState({detailItem: e.data});
+      this.setState({detailItem: item});
       if (this.overlayPanel) {
-        this.overlayPanel.show(e);
+        this.overlayPanel.show(item);
       }
-      newQuery.detail = e.data.id;
+      newQuery.detail = item.id;
     }
     this.props.history.replace({
       search: queryString.stringify(newQuery, {encode: false}),
