@@ -29,6 +29,7 @@ class App extends Component {
                     breakpointColumns={this.breakpointColumns}
                     columnModel={this.columnModel}
                     data={this.fakeDeviceData}
+                    useOverlay={false}
                   />
                 )}
               />

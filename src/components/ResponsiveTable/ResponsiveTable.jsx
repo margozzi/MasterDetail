@@ -101,9 +101,10 @@ class ResponsiveTable extends Component {
           const size = this.getSize(width);
           const mobile = size === 'mobile';
           return (
-            <div className="p-grid" style={size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
+            <div className="p-grid p-align-center p-nogutter" style={size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
               <DataTable
                 className={mobile ? 'no-table-header' : ''}
+                tableClassName={mobile ? 'no-borders' : ''}
                 value={this.props.data}
                 resizableColumns={!mobile}
                 reorderableColumns={!mobile}

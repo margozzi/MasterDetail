@@ -21,7 +21,7 @@ class SelectionHeader extends Component {
             <Button
               className="p-col-fixed"
               icon="pi pi-bars"
-              style={{marginLeft: '27px'}}
+              style={{marginLeft: '20px'}}
               onClick={event => this.menu.toggle(event)}
             />
           </>

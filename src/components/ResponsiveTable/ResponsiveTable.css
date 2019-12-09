@@ -5,3 +5,7 @@
 .detail-highlight {
   background-color: bisque !important;
 }
+
+.no-borders tbody tr td {
+  border: none !important;
+}

@@ -216,21 +216,10 @@ class MasterDetail extends Component {
         render={({width}) => {
           this.size = this.getSize(width);
           const mobile = this.size === 'mobile';
+          const flexBasis = this.props.breakpoints[0] + 'px';
           return (
-            <div className="p-grid" style={this.size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
-              <YesNoDialog
-                ref={this.confirmDialog}
-                header="Delete"
-                message="Are you sure you want to delete the selected items?"
-                callBack={this.deleteSelected}
-                maxWidth="370px"
-              ></YesNoDialog>
-              <div className="p-col" style={{margin: '10px', flexBasis: '400px'}}>
-                {!mobile && this.props.useOverlay && (
-                  <OverlayPanel style={this.overlayStyle} ref={el => (this.overlayPanel = el)}>
-                    <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
-                  </OverlayPanel>
-                )}
+            <div className="p-grid p-align-center p-nogutter" style={this.size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
+              <div className="p-col" style={{margin: '10px', flexBasis: flexBasis}}>
                 <ResponsiveHeader
                   label="Devices"
                   searchString={this.state.searchString}
@@ -259,6 +248,18 @@ class MasterDetail extends Component {
                 <div className="p-col" style={{flexBasis: '500px', minWidth: '400px', maxWidth: '600px'}}>
                   <DeviceDetails itemData={this.state.detailItem} onClose={this.clearDetails} />
                 </div>
+              )}
+              <YesNoDialog
+                ref={this.confirmDialog}
+                header="Delete"
+                message="Are you sure you want to delete the selected items?"
+                callBack={this.deleteSelected}
+                maxWidth="370px"
+              ></YesNoDialog>
+              {!mobile && this.props.useOverlay && (
+                <OverlayPanel style={this.overlayStyle} ref={el => (this.overlayPanel = el)}>
+                  <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
+                </OverlayPanel>
               )}
             </div>
           );
