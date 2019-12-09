@@ -197,7 +197,7 @@ class MasterDetail extends Component {
   }
 
   getSize = width => {
-    const breakpoints = this.props.breakpoints;
+    let breakpoints = this.props.breakpoints;
     if (width < breakpoints[0]) {
       return 'mobile';
     } else if (width >= breakpoints[0] && width < breakpoints[1]) {
@@ -218,8 +218,8 @@ class MasterDetail extends Component {
           const mobile = this.size === 'mobile';
           const flexBasis = this.props.breakpoints[0] + 'px';
           return (
-            <div className="p-grid p-align-center p-nogutter" style={this.size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
-              <div className="p-col" style={{margin: '10px', flexBasis: flexBasis}}>
+            <div className="p-grid p-nogutter" style={this.size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
+              <div className="p-col" style={{flexBasis: flexBasis}}>
                 <ResponsiveHeader
                   label="Devices"
                   searchString={this.state.searchString}
@@ -269,23 +269,27 @@ class MasterDetail extends Component {
   }
 
   onRowClicked = item => {
-    let newQuery = queryString.parse(this.props.location.search);
-    if (item === this.state.detailItem) {
-      this.setState({detailItem: null}); // toggle it if already selected
-      if (this.overlayPanel) {
-        this.overlayPanel.hide();
-      }
-      delete newQuery.detail;
+    if (this.size === 'mobile') {
+      this.props.history.push('/devices/' + item.id);
     } else {
-      this.setState({detailItem: item});
-      if (this.overlayPanel) {
-        this.overlayPanel.show(item);
+      let newQuery = queryString.parse(this.props.location.search);
+      if (item === this.state.detailItem) {
+        this.setState({detailItem: null}); // toggle it if already selected
+        if (this.overlayPanel) {
+          this.overlayPanel.hide();
+        }
+        delete newQuery.detail;
+      } else {
+        this.setState({detailItem: item});
+        if (this.overlayPanel) {
+          this.overlayPanel.show(item);
+        }
+        newQuery.detail = item.id;
       }
-      newQuery.detail = item.id;
+      this.props.history.replace({
+        search: queryString.stringify(newQuery, {encode: false}),
+      });
     }
-    this.props.history.replace({
-      search: queryString.stringify(newQuery, {encode: false}),
-    });
   };
 
   updateSelectedAndUrl = selected => {
@@ -361,11 +365,6 @@ class MasterDetail extends Component {
       }
     }
     this.updateSelectedAndUrl(clone);
-  };
-
-  // Only called for mobile
-  showDetails = item => {
-    this.props.history.push('/devices/' + item.id);
   };
 
   // Borrowed from here:  https://stackoverflow.com/questions/52561133/how-to-perform-debounce-on-onchange-react-event

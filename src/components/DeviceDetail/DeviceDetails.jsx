@@ -8,8 +8,7 @@ import KeyValuePanel from '../KeyValuePanel/KeyValuePanel';
 class DeviceDetails extends Component {
   panelStyle = {
     backgroundColor: 'white',
-    //border: '1px solid lightgrey',
-    padding: '10px',
+    marginLeft: '20px',
   };
 
   onlineStyle = {

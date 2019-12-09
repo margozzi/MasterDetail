@@ -23,27 +23,31 @@ class App extends Component {
                 exact
                 path="/"
                 render={props => (
-                  <MasterDetail
-                    label="Devices"
-                    breakpoints={this.breakpoints}
-                    breakpointColumns={this.breakpointColumns}
-                    columnModel={this.columnModel}
-                    data={this.fakeDeviceData}
-                    useOverlay={false}
-                  />
+                  <div style={{margin: '10px'}}>
+                    <MasterDetail
+                      label="Devices"
+                      breakpoints={this.breakpoints}
+                      breakpointColumns={this.breakpointColumns}
+                      columnModel={this.columnModel}
+                      data={this.fakeDeviceData}
+                      useOverlay={false}
+                    />
+                  </div>
                 )}
               />
               <Route
                 exact
                 path="/devices"
                 render={props => (
-                  <MasterDetail
-                    label="Devices"
-                    breakpoints={this.breakpoints}
-                    breakpointColumns={this.breakpointColumns}
-                    columnModel={this.columnModel}
-                    data={this.fakeDeviceData}
-                  />
+                  <div style={{margin: '10px'}}>
+                    <MasterDetail
+                      label="Devices"
+                      breakpoints={this.breakpoints}
+                      breakpointColumns={this.breakpointColumns}
+                      columnModel={this.columnModel}
+                      data={this.fakeDeviceData}
+                    />
+                  </div>
                 )}
               />
               <Route
