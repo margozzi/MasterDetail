@@ -219,7 +219,7 @@ class MasterDetail extends Component {
           const flexBasis = this.props.breakpoints[0] + 'px';
           return (
             <div className="p-grid p-nogutter" style={size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
-              <div className="p-col" style={{flexBasis: flexBasis, minWidth: flexBasis}}>
+              <div className="p-col" style={{flexBasis: flexBasis}}>
                 <ResponsiveHeader
                   label="Devices"
                   searchString={this.state.searchString}
