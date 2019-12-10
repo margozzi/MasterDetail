@@ -12,6 +12,7 @@ class ResponsiveTable extends Component {
     super(props);
     this.onRowSelection = this.onRowSelection.bind(this);
     this.rowClassName = this.rowClassName.bind(this);
+    this.changeAll = this.changeAll.bind(this);
   }
 
   summaryTemplate = item => {
@@ -24,7 +25,6 @@ class ResponsiveTable extends Component {
         line3Field={this.props.line3Field}
         selected={typeof this.props.selected.find(selected => selected.id === item.id) !== 'undefined'}
         onSelection={this.onRowSelection}
-        //onShowDetails={this.onRowClick}
         onShowDetails={() => {}}
       ></Summary>
     );
@@ -59,7 +59,14 @@ class ResponsiveTable extends Component {
 
     cm.unshift(
       <Column
-        header={<SelectionButton initials=" " bgColor="transparent" onClick={this.changeAll} />}
+        header={
+          <SelectionButton
+            initials=" "
+            bgColor="transparent"
+            selected={this.props.selected.length === this.props.data.length}
+            onClick={this.changeAll}
+          />
+        }
         body={this.buttonTemplate}
         style={{minWidth: '60px', width: '60px'}}
         key={'selectAll'}
@@ -126,10 +133,8 @@ class ResponsiveTable extends Component {
   }
 
   changeAll = selected => {
-    if (selected) {
-      this.setState({selected: this.props.data});
-    } else {
-      this.setState({selected: []});
+    if (this.props.selectionChangeCallback) {
+      this.props.selectionChangeCallback(selected ? this.props.data : []);
     }
   };
 
@@ -161,21 +166,11 @@ class ResponsiveTable extends Component {
         }
       }
     }
-    this.setState({selected: clone});
     this.props.selectionChangeCallback(clone);
   };
 
   onRowClick = item => {
     this.props.rowClickCallback(item.data);
-  };
-
-  load = event => {
-    //var first = event.first ;
-    //var count = event.rows;
-    this.setState({
-      data: this.props.data,
-      totalRecords: this.props.data.length,
-    });
   };
 }
 
@@ -215,5 +210,5 @@ ResponsiveTable.defaultProps = {
   selected: [],
   useOverlay: true,
   rowClickCallback: () => {},
-  rowSelectionCallback: () => {},
+  selectionChangeCallback: () => {},
 };

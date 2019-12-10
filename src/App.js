@@ -1,12 +1,12 @@
 import React, {Component, Suspense, lazy} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 // Prime React related
-import {ProgressSpinner} from 'primereact/progressspinner';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import ColumnFormatter from './services/ColumnFormatter';
+import WaitSpinner from './components/WaitSpinner/WaitSpinner';
 
 class App extends Component {
   render() {
@@ -17,7 +17,7 @@ class App extends Component {
     return (
       <div>
         <BrowserRouter>
-          <Suspense fallback={<ProgressSpinner />}>
+          <Suspense fallback={<WaitSpinner />}>
             <Switch>
               <Route
                 exact

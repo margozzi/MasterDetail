@@ -11,8 +11,8 @@ import ResponsiveHeader from '../ResponsiveHeader/ResponsiveHeader';
 import './MasterDetail.css';
 
 class MasterDetail extends Component {
-  // Holds the current size of the component
-  size = '';
+  // Is the current width considered 'mobile' size?
+  mobile = false;
 
   selectionMenuItems = [
     {
@@ -124,7 +124,7 @@ class MasterDetail extends Component {
   };
 
   getInitialDetail = data => {
-    if (this.size !== 'mobile' && this.props.location.search) {
+    if (!this.mobile && this.props.location.search) {
       const query = queryString.parse(this.props.location.search);
       if (query.detail) {
         const id = parseInt(query.detail);
@@ -214,12 +214,12 @@ class MasterDetail extends Component {
       <ResizeDetector
         handleWidth
         render={({width}) => {
-          this.size = this.getSize(width);
-          const mobile = this.size === 'mobile';
+          const size = this.getSize(width);
+          this.mobile = size === 'mobile';
           const flexBasis = this.props.breakpoints[0] + 'px';
           return (
-            <div className="p-grid p-nogutter" style={this.size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
-              <div className="p-col" style={{flexBasis: flexBasis}}>
+            <div className="p-grid p-nogutter" style={size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
+              <div className="p-col" style={{flexBasis: flexBasis, minWidth: flexBasis}}>
                 <ResponsiveHeader
                   label="Devices"
                   searchString={this.state.searchString}
@@ -227,7 +227,7 @@ class MasterDetail extends Component {
                   deleteCallback={() => this.confirmDialog.current.setVisible(true)}
                   selectedCount={this.state.selected.length}
                   searchCallback={this.onSearch}
-                  mobile={mobile}
+                  mobile={this.mobile}
                   menuModel={this.buildMenu()}
                 ></ResponsiveHeader>
                 <ResponsiveTable
@@ -244,8 +244,8 @@ class MasterDetail extends Component {
                   rowClickCallback={this.onRowClicked}
                 ></ResponsiveTable>
               </div>
-              {this.state.detailItem && !mobile && !this.props.useOverlay && (
-                <div className="p-col" style={{flexBasis: '500px', minWidth: '400px', maxWidth: '600px'}}>
+              {this.state.detailItem && !this.mobile && !this.props.useOverlay && (
+                <div className="p-col" style={{flexBasis: '500px', minWidth: '300px', maxWidth: '600px'}}>
                   <DeviceDetails itemData={this.state.detailItem} onClose={this.clearDetails} />
                 </div>
               )}
@@ -256,7 +256,7 @@ class MasterDetail extends Component {
                 callBack={this.deleteSelected}
                 maxWidth="370px"
               ></YesNoDialog>
-              {!mobile && this.props.useOverlay && (
+              {!this.mobile && this.props.useOverlay && (
                 <OverlayPanel style={this.overlayStyle} ref={el => (this.overlayPanel = el)}>
                   <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
                 </OverlayPanel>
@@ -269,7 +269,7 @@ class MasterDetail extends Component {
   }
 
   onRowClicked = item => {
-    if (this.size === 'mobile') {
+    if (this.mobile) {
       this.props.history.push('/devices/' + item.id);
     } else {
       let newQuery = queryString.parse(this.props.location.search);
