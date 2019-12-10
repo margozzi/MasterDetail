@@ -1,5 +1,5 @@
 import React, {Component, Suspense, lazy} from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 // Prime React related
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -19,22 +19,7 @@ class App extends Component {
         <BrowserRouter>
           <Suspense fallback={<WaitSpinner />}>
             <Switch>
-              <Route
-                exact
-                path="/"
-                render={props => (
-                  <div style={{margin: '10px'}}>
-                    <MasterDetail
-                      label="Devices"
-                      breakpoints={this.breakpoints}
-                      breakpointColumns={this.breakpointColumns}
-                      columnModel={this.columnModel}
-                      data={this.fakeDeviceData}
-                      useOverlay={false}
-                    />
-                  </div>
-                )}
-              />
+              <Route exact path="/" render={props => <Redirect to={{pathname: '/devices', state: {from: '/'}}} />} />
               <Route
                 exact
                 path="/devices"
