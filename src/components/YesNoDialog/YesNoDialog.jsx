@@ -29,6 +29,7 @@ class YesNoDialog extends Component {
           this.setVisible(false);
         }}
         modal={this.props.modal}
+        closable={false}
       >
         {this.props.message}
       </Dialog>

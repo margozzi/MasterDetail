@@ -252,7 +252,7 @@ class MasterDetail extends Component {
               )}
               <YesNoDialog
                 ref={this.confirmDialog}
-                header="Delete"
+                header="Delete Selected Items?"
                 message="Are you sure you want to delete the selected items?"
                 callBack={this.deleteSelected}
                 maxWidth="370px"
@@ -347,6 +347,7 @@ class MasterDetail extends Component {
       .then(() => {
         this.confirmDialog.current.setVisible(false);
         this.load();
+        this.clearSelection();
       })
       .catch(reason => {
         alert(reason);
@@ -403,5 +404,5 @@ MasterDetail.defaultProps = {
   breakpoints: [480, 839, 1024],
   breakpointColumns: [3, 6, 9],
   useOverlay: true,
-  confirmDelete: false,
+  confirmDelete: true,
 };
