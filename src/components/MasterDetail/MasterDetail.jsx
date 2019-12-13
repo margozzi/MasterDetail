@@ -54,16 +54,11 @@ class MasterDetail extends Component {
   };
 
   setEnabledState = state => {
-    var clone = [...this.state.data];
     this.state.selected.forEach(item => {
-      for (var i = 0; i < clone.length; i++) {
-        if (clone[i].id === item.id) {
-          item.enabled = state;
-          break;
-        }
-      }
+      item.enabled = state;
+      this.props.dataService.update(item);
     });
-    this.setState({data: clone});
+    this.load();
   };
 
   deleteMenuItem = {
@@ -73,27 +68,14 @@ class MasterDetail extends Component {
     },
   };
 
-  overlayStyle = {
-    width: '550px',
-    height: '550px',
-    maxHeight: '80vh',
-    overflow: 'auto',
-    margin: 'auto',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  };
-
   constructor(props) {
     super(props);
     this.label = React.createRef();
     this.confirmDialog = React.createRef();
     this.state = {
       selected: [],
-      data: this.props.data,
-      totalRecords: this.props.data.length,
+      data: [],
+      totalRecords: 0,
       detailItem: null,
       searchString: '',
     };
@@ -183,17 +165,26 @@ class MasterDetail extends Component {
     this.props.history.replace({
       search: queryString.stringify(newQuery, {encode: false}),
     });
-    this.search(searchString);
+    this.load(searchString);
   };
 
   componentDidMount() {
-    // Temporary code
-    this.search(this.getInitialSearch());
-    this.setState({
-      selected: this.getInitialSelection(this.props.data),
-      detailItem: this.getInitialDetail(this.props.data),
-      searchString: this.getInitialSearch(),
-    });
+    const initialSearchString = this.getInitialSearch();
+    this.props.dataService
+      .list(0, 5, null, this.getInitialSearch())
+      .then(response => {
+        const detailItem = this.getInitialDetail(response);
+        this.setState({
+          data: response,
+          selected: this.getInitialSelection(response),
+          detailItem: detailItem,
+          searchString: initialSearchString,
+        });
+        if (this.overlayPanel && detailItem) {
+          this.overlayPanel.show(detailItem);
+        }
+      })
+      .catch(error => console.log(error));
   }
 
   getSize = width => {
@@ -257,7 +248,7 @@ class MasterDetail extends Component {
                 maxWidth="370px"
               ></YesNoDialog>
               {!this.mobile && this.props.useOverlay && (
-                <OverlayPanel style={this.overlayStyle} ref={el => (this.overlayPanel = el)}>
+                <OverlayPanel className="overlayStyle" ref={el => (this.overlayPanel = el)}>
                   <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
                 </OverlayPanel>
               )}
@@ -341,16 +332,16 @@ class MasterDetail extends Component {
   };
 
   deleteSelected = () => {
-    let filtered = this.state.data.filter(item => {
-      return this.state.selected.includes(item) === false;
-    });
-    this.setState({data: filtered});
-    this.confirmDialog.current.setVisible(false);
+    this.props.dataService
+      .delete(this.state.selected)
+      .then(() => {
+        this.confirmDialog.current.setVisible(false);
+        this.load();
+      })
+      .catch(reason => {
+        alert(reason);
+      });
   };
-
-  loadingText() {
-    return <span className="loading-text"></span>;
-  }
 
   onSummarySelection = (selected, item) => {
     var clone = [...this.state.selected];
@@ -367,38 +358,14 @@ class MasterDetail extends Component {
     this.updateSelectedAndUrl(clone);
   };
 
-  // Borrowed from here:  https://stackoverflow.com/questions/52561133/how-to-perform-debounce-on-onchange-react-event
-  // Other options involve installing libraries like lodash wich seems overkill.
-  debounce = (func, wait) => {
-    let timeout;
-    return function() {
-      const context = this;
-      const args = arguments;
-      const later = function() {
-        timeout = null;
-        func.apply(context, args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
+  load = (filter = this.state.searchString, offset = 0, limit = 5, sort) => {
+    this.props.dataService.list(offset, limit, sort, filter).then(response => {
+      this.setState({
+        data: response,
+        totalRecords: response.length,
+      });
+    });
   };
-
-  search = this.debounce(searchString => {
-    if (searchString.length === 0) {
-      this.setState({
-        data: this.props.data,
-        totalRecords: this.props.data.length,
-      });
-    } else {
-      const newArray = this.props.data.filter(item => {
-        return item.user.includes(searchString);
-      });
-      this.setState({
-        data: newArray,
-        totalRecords: newArray.length,
-      });
-    }
-  }, 400);
 }
 
 export default withRouter(MasterDetail);
@@ -407,7 +374,7 @@ MasterDetail.propTypes = {
   /** The label to be used to identify the array of data */
   label: PropTypes.string.isRequired,
   /** An array of data that will be used in the master table and the details panel */
-  data: PropTypes.array.isRequired,
+  // data: PropTypes.array.isRequired,
   /** Column Model to be used on the PrimeReact DataTable */
   columnModel: PropTypes.array.isRequired,
   /** Widths at which the table should respond */
@@ -416,6 +383,8 @@ MasterDetail.propTypes = {
   breakpointColumns: PropTypes.array,
   /** Use an overlay panel to show detail, else inline. Defaults to false */
   useOverlay: PropTypes.bool,
+  /** Data Service. Used to fatch data */
+  dataService: PropTypes.object.isRequired,
 };
 
 MasterDetail.defaultProps = {

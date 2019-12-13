@@ -5,3 +5,16 @@
 .detail-highlight {
   background-color: bisque !important;
 }
+
+.overlayStyle {
+  width: 550px;
+  height: 550px;
+  max-height: 80vh;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

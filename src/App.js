@@ -7,8 +7,18 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import ColumnFormatter from './services/ColumnFormatter';
 import WaitSpinner from './components/WaitSpinner/WaitSpinner';
+import FakeDataService from './services/FakeDataService';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+    };
+  }
+
+  deviceDataService = new FakeDataService();
+
   render() {
     const MasterDetail = lazy(() => import('./components/MasterDetail/MasterDetail'));
     const DeviceDetails = lazy(() => import('./components/DeviceDetail/DeviceDetails'));
@@ -30,14 +40,14 @@ class App extends Component {
                       breakpoints={this.breakpoints}
                       breakpointColumns={this.breakpointColumns}
                       columnModel={this.columnModel}
-                      data={this.fakeDeviceData}
+                      dataService={this.deviceDataService}
                     />
                   </div>
                 )}
               />
               <Route
                 path="/devices/:id"
-                render={props => <DeviceDetails itemData={this.fakeDeviceData[props.match.params.id]} />}
+                render={props => <DeviceDetails itemData={this.deviceDataService.get(props.match.params.id)} />}
               />
               {/* when none of the above match */}
               <Route component={NotFound} />
@@ -70,89 +80,6 @@ class App extends Component {
       header: 'Cert Expires',
       width: 100,
       formatter: new ColumnFormatter({field: 'expires'}).dateFromNowTemplate,
-    },
-  ];
-
-  fakeDeviceData = [
-    {
-      id: 0,
-      user: 'Fred Flintstone',
-      role: 'student',
-      manufacturer: 'Samsung',
-      type: 'Galaxy',
-      model: 'S8',
-      mac: '11:22:33:44:55:66',
-      name: 'Personal cell phone',
-      status: 'online',
-      credentials: 'certificate',
-      enabled: true,
-      active: true,
-      added: 1564076127000,
-      expires: 1588523327000,
-    },
-    {
-      id: 1,
-      user: 'Fred Flintstone',
-      role: 'student',
-      manufacturer: 'Apple',
-      type: 'iPhone',
-      model: 'X',
-      mac: '22:33:44:55:66:77',
-      name: 'Work cell phone',
-      status: 'online',
-      credentials: 'certificate',
-      enabled: true,
-      active: true,
-      added: 1563076127000,
-      expires: 1566076127000,
-    },
-    {
-      id: 2,
-      user: 'Fred Flintstone',
-      role: 'student',
-      manufacturer: 'Roku',
-      type: 'Streaming Stick',
-      model: '3800',
-      mac: '33:44:55:66:77:88',
-      name: 'Livingroom Roku',
-      status: 'offline',
-      credentials: 'MPSK',
-      enabled: true,
-      active: true,
-      added: 1553076127000,
-      expires: 1656076127000,
-    },
-    {
-      id: 3,
-      user: 'Barney Rubble',
-      role: 'faculty',
-      manufacturer: 'Roku',
-      type: 'Streaming Stick',
-      model: '3800',
-      mac: '44:55:66:77:88:99',
-      name: 'Bedroom Roku',
-      status: 'online',
-      credentials: 'MPSK',
-      enabled: true,
-      active: true,
-      added: 1053076127000,
-      expires: 0,
-    },
-    {
-      id: 4,
-      user: 'Barney Rubble',
-      role: 'faculty',
-      manufacturer: 'Apple',
-      type: 'iPhone',
-      model: '5',
-      mac: '55:66:77:88:99:aa',
-      name: 'Personal cell phone',
-      status: 'online',
-      credentials: 'certificate',
-      enabled: true,
-      active: true,
-      added: 1500076127000,
-      expires: 1550076127000,
     },
   ];
 }

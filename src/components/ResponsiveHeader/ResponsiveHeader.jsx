@@ -9,8 +9,9 @@ class ResponsiveHeader extends Component {
       <>
         {this.props.mobile && this.props.selectedCount === 0 && (
           <SearchHeader
+            key={this.props.searchString}
             label={this.props.label}
-            searchString={this.props.searchString}
+            initialSearch={this.props.searchString}
             searchCallback={this.props.searchCallback}
             hideLabel={true}
             menuModel={this.props.menuModel}
@@ -26,8 +27,9 @@ class ResponsiveHeader extends Component {
         )}
         {!this.props.mobile && (
           <SearchHeader
+            key={this.props.searchString}
             label={this.props.label}
-            searchString={this.props.searchString}
+            initialSearch={this.props.searchString}
             searchCallback={this.props.searchCallback}
             menuModel={this.props.menuModel}
           ></SearchHeader>
