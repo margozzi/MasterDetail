@@ -41,7 +41,9 @@ class App extends Component {
                       breakpointColumns={this.breakpointColumns}
                       columnModel={this.columnModel}
                       dataService={this.deviceDataService}
-                    />
+                    >
+                      <DeviceDetails></DeviceDetails>
+                    </MasterDetail>
                   </div>
                 )}
               />

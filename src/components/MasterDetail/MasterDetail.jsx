@@ -4,7 +4,6 @@ import queryString from 'query-string';
 import React, {Component} from 'react';
 import ResizeDetector from 'react-resize-detector';
 import {withRouter} from 'react-router-dom';
-import DeviceDetails from '../DeviceDetail/DeviceDetails';
 import YesNoDialog from '../YesNoDialog/YesNoDialog';
 import ResponsiveTable from '../ResponsiveTable/ResponsiveTable';
 import ResponsiveHeader from '../ResponsiveHeader/ResponsiveHeader';
@@ -64,7 +63,11 @@ class MasterDetail extends Component {
   deleteMenuItem = {
     label: 'Delete',
     command: () => {
-      this.confirmDialog.current.setVisible(true);
+      if (this.props.confirmDelete) {
+        this.confirmDialog.current.setVisible(true);
+      } else {
+        this.deleteSelected();
+      }
     },
   };
 
@@ -201,6 +204,13 @@ class MasterDetail extends Component {
   };
 
   render() {
+    const detailPanel = React.Children.map(this.props.children, child => {
+      return React.cloneElement(child, {
+        itemData: this.state.detailItem || {},
+        onClose: this.clearDetails,
+      });
+    });
+
     return (
       <ResizeDetector
         handleWidth
@@ -215,7 +225,7 @@ class MasterDetail extends Component {
                   label="Devices"
                   searchString={this.state.searchString}
                   clearCallback={this.clearSelection}
-                  deleteCallback={() => this.confirmDialog.current.setVisible(true)}
+                  //deleteCallback={this.onDelete}
                   selectedCount={this.state.selected.length}
                   searchCallback={this.onSearch}
                   mobile={this.mobile}
@@ -237,7 +247,7 @@ class MasterDetail extends Component {
               </div>
               {this.state.detailItem && !this.mobile && !this.props.useOverlay && (
                 <div className="p-col" style={{flexBasis: '500px', minWidth: '300px', maxWidth: '600px'}}>
-                  <DeviceDetails itemData={this.state.detailItem} onClose={this.clearDetails} />
+                  {detailPanel}
                 </div>
               )}
               <YesNoDialog
@@ -249,7 +259,7 @@ class MasterDetail extends Component {
               ></YesNoDialog>
               {!this.mobile && this.props.useOverlay && (
                 <OverlayPanel className="overlayStyle" ref={el => (this.overlayPanel = el)}>
-                  <DeviceDetails itemData={this.state.detailItem || {}} onClose={this.clearDetails} />
+                  {detailPanel}
                 </OverlayPanel>
               )}
             </div>
@@ -385,10 +395,13 @@ MasterDetail.propTypes = {
   useOverlay: PropTypes.bool,
   /** Data Service. Used to fatch data */
   dataService: PropTypes.object.isRequired,
+  /** SHould a confirmation dialog be shown before deleting */
+  confirmDelete: PropTypes.bool,
 };
 
 MasterDetail.defaultProps = {
   breakpoints: [480, 839, 1024],
   breakpointColumns: [3, 6, 9],
   useOverlay: true,
+  confirmDelete: false,
 };
