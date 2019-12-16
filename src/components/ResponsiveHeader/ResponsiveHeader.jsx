@@ -9,9 +9,9 @@ class ResponsiveHeader extends Component {
       <>
         {this.props.mobile && this.props.selectedCount === 0 && (
           <SearchHeader
-            key={this.props.searchString}
+            key={this.props.initialSearchString}
             label={this.props.label}
-            initialSearch={this.props.searchString}
+            initialSearch={this.props.initialSearchString}
             searchCallback={this.props.searchCallback}
             hideLabel={true}
             menuModel={this.props.menuModel}
@@ -27,9 +27,9 @@ class ResponsiveHeader extends Component {
         )}
         {!this.props.mobile && (
           <SearchHeader
-            key={this.props.searchString}
+            key={this.props.initialSearchString}
             label={this.props.label}
-            initialSearch={this.props.searchString}
+            initialSearch={this.props.initialSearchString}
             searchCallback={this.props.searchCallback}
             menuModel={this.props.menuModel}
           ></SearchHeader>
@@ -47,7 +47,7 @@ ResponsiveHeader.propTypes = {
   /** Use an overlay panel to show detail, else inline. Defaults to false */
   mobile: PropTypes.bool.isRequired,
   /** Initial search string. Optional */
-  searchString: PropTypes.string,
+  initialSearchString: PropTypes.string,
   /** Callback for when the search string has changed. */
   searchCallback: PropTypes.func.isRequired,
   /** If you would like a menu to the far left, provide a model here */

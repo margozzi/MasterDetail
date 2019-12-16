@@ -81,6 +81,7 @@ class MasterDetail extends Component {
       totalRecords: 0,
       detailItem: null,
       searchString: '',
+      initialSearchString: '',
     };
     this.onRowClicked = this.onRowClicked.bind(this);
     this.onSummarySelection = this.onSummarySelection.bind(this);
@@ -181,7 +182,7 @@ class MasterDetail extends Component {
           data: response,
           selected: this.getInitialSelection(response),
           detailItem: detailItem,
-          searchString: initialSearchString,
+          initialSearchString: initialSearchString,
         });
         if (this.overlayPanel && detailItem) {
           this.overlayPanel.show(detailItem);
@@ -223,7 +224,7 @@ class MasterDetail extends Component {
               <div className="p-col" style={{flexBasis: flexBasis}}>
                 <ResponsiveHeader
                   label="Devices"
-                  searchString={this.state.searchString}
+                  initialSearchString={this.state.initialSearchString}
                   clearCallback={this.clearSelection}
                   //deleteCallback={this.onDelete}
                   selectedCount={this.state.selected.length}
