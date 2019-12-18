@@ -2,8 +2,8 @@ import {PropTypes} from 'prop-types';
 import React, {Component} from 'react';
 import Moment from 'react-moment';
 import {withRouter} from 'react-router-dom';
-import LabeledButton from '../LabeledButton/LabeledButton';
-import KeyValuePanel from '../KeyValuePanel/KeyValuePanel';
+import LabeledButton from '../../components/LabeledButton/LabeledButton';
+import KeyValuePanel from '../../components/KeyValuePanel/KeyValuePanel';
 
 class DeviceDetails extends Component {
   panelStyle = {

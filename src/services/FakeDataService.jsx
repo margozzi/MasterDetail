@@ -1,12 +1,18 @@
 import React from 'react';
+import {PropTypes} from 'prop-types';
 
 class FakeDataService extends React.Component {
-  list = (offset, limit, sort, filter) => {
-    if (!filter || filter.length === 0) {
+  config = {offest: 0, limit: 20, sort: null, filter: null};
+
+  list = config => {
+    if (config) {
+      this.config = {...this.config, ...config}; // Merge
+    }
+    if (!this.config.filter || this.config.filter.length === 0) {
       return Promise.resolve(this.fakeData);
     } else {
       const newArray = this.fakeData.filter(item => {
-        return item.user.includes(filter);
+        return item.user.includes(this.configfilter);
       });
       return Promise.resolve(newArray);
     }
@@ -56,6 +62,10 @@ class FakeDataService extends React.Component {
       }
     }
     return Promise.resolve(this.fakeData);
+  };
+
+  dataChanged = () => {
+    this.props.dataChangedCallback();
   };
 
   fakeData = [
@@ -143,3 +153,12 @@ class FakeDataService extends React.Component {
 }
 
 export default FakeDataService;
+
+FakeDataService.propTypes = {
+  /** Data changed callback */
+  dataChangedCallback: PropTypes.func,
+};
+
+FakeDataService.defaultProps = {
+  dataChangedCallback: () => {},
+};

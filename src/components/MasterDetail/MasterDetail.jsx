@@ -13,64 +13,6 @@ class MasterDetail extends Component {
   // Is the current width considered 'mobile' size?
   mobile = false;
 
-  selectionMenuItems = [
-    {
-      label: 'Selection',
-      items: [
-        {
-          label: 'Select All',
-          command: () => {
-            this.changeAll(true);
-          },
-        },
-        {
-          label: 'Select None',
-          command: () => {
-            this.changeAll(false);
-          },
-        },
-      ],
-    },
-  ];
-
-  editMenuItem = {
-    label: 'Edit',
-    command: () => {},
-  };
-
-  disableMenuItem = {
-    label: 'Disable',
-    command: () => {
-      this.setEnabledState(false);
-    },
-  };
-
-  enableMenuItem = {
-    label: 'Enable',
-    command: () => {
-      this.setEnabledState(true);
-    },
-  };
-
-  setEnabledState = state => {
-    this.state.selected.forEach(item => {
-      item.enabled = state;
-      this.props.dataService.update(item);
-    });
-    this.load();
-  };
-
-  deleteMenuItem = {
-    label: 'Delete',
-    command: () => {
-      if (this.props.confirmDelete) {
-        this.confirmDialog.current.setVisible(true);
-      } else {
-        this.deleteSelected();
-      }
-    },
-  };
-
   constructor(props) {
     super(props);
     this.label = React.createRef();
@@ -135,26 +77,44 @@ class MasterDetail extends Component {
   };
 
   buildMenu = () => {
-    let menuItems = this.selectionMenuItems.slice(0);
-    if (this.state.selected.length > 0) {
-      let actions = {
-        label: 'Actions',
-        items: [],
-      };
-      menuItems.push(actions);
-      // static menu item
-      if (this.state.selected.length === 1) actions.items.push(this.editMenuItem);
-      // Dynamic menu items
-      let enabledCount = 0;
-      let disabledCount = 0;
-
-      this.state.selected.forEach(item => {
-        item.enabled ? enabledCount++ : disabledCount++;
-      });
-      if (enabledCount > 0) actions.items.push(this.disableMenuItem);
-      if (disabledCount > 0) actions.items.push(this.enableMenuItem);
-      actions.items.push(this.deleteMenuItem);
+    let menuItems = [
+      {
+        label: 'Selection',
+        items: [
+          {
+            label: 'Select All',
+            command: () => {
+              this.changeAll(true);
+            },
+          },
+          {
+            label: 'Select None',
+            command: () => {
+              this.changeAll(false);
+            },
+          },
+        ],
+      },
+    ];
+    if (this.props.menuProvider) {
+      const providedItems = this.props.menuProvider.buildMenu(this.state.selected);
+      if (providedItems) {
+        menuItems.push(providedItems);
+      }
     }
+    if (this.state.selected.length > 0) {
+      menuItems.push({
+        label: 'Delete',
+        command: () => {
+          if (this.props.confirmDelete) {
+            this.confirmDialog.current.setVisible(true);
+          } else {
+            this.deleteSelected();
+          }
+        },
+      });
+    }
+
     return menuItems;
   };
 
@@ -169,21 +129,23 @@ class MasterDetail extends Component {
     this.props.history.replace({
       search: queryString.stringify(newQuery, {encode: false}),
     });
-    this.load(searchString);
+    this.load({filter: searchString});
   };
 
   componentDidMount() {
     const initialSearchString = this.getInitialSearch();
     this.props.dataService
-      .list(0, 5, null, this.getInitialSearch())
+      .list({filter: initialSearchString})
       .then(response => {
         const detailItem = this.getInitialDetail(response);
+        const selected = this.getInitialSelection(response);
         this.setState({
           data: response,
-          selected: this.getInitialSelection(response),
+          selected: selected,
           detailItem: detailItem,
           initialSearchString: initialSearchString,
         });
+        this.props.selectionChangedCallback(selected);
         if (this.overlayPanel && detailItem) {
           this.overlayPanel.show(detailItem);
         }
@@ -226,7 +188,7 @@ class MasterDetail extends Component {
                   label="Devices"
                   initialSearchString={this.state.initialSearchString}
                   clearCallback={this.clearSelection}
-                  //deleteCallback={this.onDelete}
+                  deleteCallback={() => {}}
                   selectedCount={this.state.selected.length}
                   searchCallback={this.onSearch}
                   mobile={this.mobile}
@@ -306,6 +268,7 @@ class MasterDetail extends Component {
     this.props.history.replace({
       search: queryString.stringify(newQuery, {encode: false}),
     });
+    this.props.selectionChangedCallback(selected);
   };
 
   buildIdList = selected => {
@@ -370,8 +333,8 @@ class MasterDetail extends Component {
     this.updateSelectedAndUrl(clone);
   };
 
-  load = (filter = this.state.searchString, offset = 0, limit = 5, sort) => {
-    this.props.dataService.list(offset, limit, sort, filter).then(response => {
+  load = config => {
+    this.props.dataService.list(config).then(response => {
       this.setState({
         data: response,
         totalRecords: response.length,
@@ -397,8 +360,12 @@ MasterDetail.propTypes = {
   useOverlay: PropTypes.bool,
   /** Data Service. Used to fatch data */
   dataService: PropTypes.object.isRequired,
-  /** SHould a confirmation dialog be shown before deleting */
+  /** Should a confirmation dialog be shown before deleting */
   confirmDelete: PropTypes.bool,
+  /** Menu provider to help build the menu and flex based on selection */
+  menuProvider: PropTypes.object,
+  /** Callback when row selection has changed  */
+  selectionChangedCallback: PropTypes.func,
 };
 
 MasterDetail.defaultProps = {
@@ -406,4 +373,5 @@ MasterDetail.defaultProps = {
   breakpointColumns: [3, 6, 9],
   useOverlay: true,
   confirmDelete: true,
+  selectionChangedCallback: () => {},
 };
