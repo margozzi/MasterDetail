@@ -25,6 +25,7 @@ class MasterDetail extends Component {
       searchString: '',
       initialSearchString: '',
     };
+    this.props.dataService.setReloadCallback(this.load);
     this.onRowClicked = this.onRowClicked.bind(this);
     this.onSummarySelection = this.onSummarySelection.bind(this);
     this.deleteSelected = this.deleteSelected.bind(this);

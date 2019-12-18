@@ -93,7 +93,9 @@ class Devices extends Component {
   setEnabledState = state => {
     this.state.selected.forEach(item => {
       item.enabled = state;
-      this.deviceDataService.update(item);
+      this.deviceDataService.update(item).then(response => {
+        this.deviceDataService.reload();
+      });
     });
   };
 

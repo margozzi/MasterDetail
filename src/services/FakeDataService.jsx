@@ -68,6 +68,14 @@ class FakeDataService extends React.Component {
     this.props.dataChangedCallback();
   };
 
+  setReloadCallback = callback => {
+    this.reloadCallback = callback;
+  };
+
+  reload = () => {
+    this.reloadCallback();
+  };
+
   fakeData = [
     {
       id: 0,
