@@ -1,7 +1,6 @@
 import {PropTypes} from 'prop-types';
 import React, {Component} from 'react';
 import Moment from 'react-moment';
-import {withRouter} from 'react-router-dom';
 import LabeledButton from '../../components/LabeledButton/LabeledButton';
 import KeyValuePanel from '../../components/KeyValuePanel/KeyValuePanel';
 import FakeDataService from './../../services/FakeDataService';
@@ -80,7 +79,6 @@ class DeviceDetails extends Component {
   }
 
   render() {
-    const mobile = this.props.location.pathname.startsWith('/device/');
     const device = this.props.itemId ? this.state.itemData : this.props.itemData;
     if (!device && !this.props.itemId) {
       return null;
@@ -107,7 +105,7 @@ class DeviceDetails extends Component {
             {device.status === 'online' ? 'Online' : 'Offline'}
           </div>
           <div className="p-col" style={{width: '100%'}} />
-          {!mobile && (
+          {this.props.showClose && (
             <i
               className="p-col-fixed pi pi-times"
               onClick={this.onClose}
@@ -176,11 +174,7 @@ class DeviceDetails extends Component {
   }
 }
 
-export default withRouter(DeviceDetails);
-
-DeviceDetails.defaultProps = {
-  onClose: () => {},
-};
+export default DeviceDetails;
 
 DeviceDetails.propTypes = {
   /** The data object for this device */
@@ -189,4 +183,11 @@ DeviceDetails.propTypes = {
   itemId: PropTypes.string,
   /** Function to call back when the close button is clicked */
   onClose: PropTypes.func,
+  /** Should the close button be shown in the upper right corner */
+  showClose: PropTypes.bool,
+};
+
+DeviceDetails.defaultProps = {
+  onClose: () => {},
+  showClose: true,
 };

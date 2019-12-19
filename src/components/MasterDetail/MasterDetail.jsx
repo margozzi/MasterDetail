@@ -106,13 +106,7 @@ class MasterDetail extends Component {
     if (this.state.selected.length > 0) {
       menuItems.push({
         label: 'Delete',
-        command: () => {
-          if (this.props.confirmDelete) {
-            this.confirmDialog.current.setVisible(true);
-          } else {
-            this.deleteSelected();
-          }
-        },
+        command: this.onDelete,
       });
     }
 
@@ -209,7 +203,7 @@ class MasterDetail extends Component {
                   label="Devices"
                   initialSearchString={this.state.initialSearchString}
                   clearCallback={this.clearSelection}
-                  deleteCallback={() => {}}
+                  deleteCallback={this.onDelete}
                   selectedCount={this.state.selected.length}
                   searchCallback={this.onSearch}
                   mobile={this.mobile}
@@ -323,6 +317,14 @@ class MasterDetail extends Component {
     this.setState({detailItem: null});
     if (this.props.useOverlay && this.overlayPanel) {
       this.overlayPanel.hide();
+    }
+  };
+
+  onDelete = () => {
+    if (this.props.confirmDelete) {
+      this.confirmDialog.current.setVisible(true);
+    } else {
+      this.deleteSelected();
     }
   };
 

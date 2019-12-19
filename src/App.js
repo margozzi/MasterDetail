@@ -30,7 +30,7 @@ class App extends Component {
               <Route exact path="/devices" render={props => <Devices></Devices>} />
               <Route
                 path="/devices/:id"
-                render={props => <DeviceDetails itemId={props.match.params.id} itemData={null} />}
+                render={props => <DeviceDetails itemId={props.match.params.id} itemData={null} showClose={false} />}
               />
               {/* when none of the above match */}
               <Route component={NotFound} />
