@@ -12,7 +12,7 @@ class FakeDataService extends React.Component {
       return Promise.resolve(this.fakeData);
     } else {
       const newArray = this.fakeData.filter(item => {
-        return item.user.includes(this.configfilter);
+        return item.user.includes(this.config.filter);
       });
       return Promise.resolve(newArray);
     }

@@ -133,7 +133,8 @@ class MasterDetail extends Component {
     this.load({filter: searchString});
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
+    document.addEventListener('keydown', this.keyboardNav, false);
     const initialSearchString = this.getInitialSearch();
     this.props.dataService
       .list({filter: initialSearchString})
@@ -142,6 +143,7 @@ class MasterDetail extends Component {
         const selected = this.getInitialSelection(response);
         this.setState({
           data: response,
+          totalRecords: response.length,
           selected: selected,
           detailItem: detailItem,
           initialSearchString: initialSearchString,
@@ -152,7 +154,25 @@ class MasterDetail extends Component {
         }
       })
       .catch(error => console.log(error));
-  }
+  };
+
+  componentWillUnmount = () => {
+    document.removeEventListener('keydown', this.keyboardNav, false);
+  };
+
+  keyboardNav = event => {
+    if (this.state.detailItem) {
+      let index = this.state.data.indexOf(this.state.detailItem);
+
+      if (event.keyCode === 38 && index > 0) {
+        //Arrow Up
+        this.setState({detailItem: this.state.data[index - 1]});
+      } else if (event.keyCode === 40 && index < this.state.totalRecords - 1) {
+        // Arrow Down
+        this.setState({detailItem: this.state.data[index + 1]});
+      }
+    }
+  };
 
   getSize = width => {
     let breakpoints = this.props.breakpoints;
