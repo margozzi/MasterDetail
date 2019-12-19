@@ -160,10 +160,10 @@ class MasterDetail extends Component {
 
       if (event.keyCode === 38 && index > 0) {
         //Arrow Up
-        this.setState({detailItem: this.state.data[index - 1]});
+        this.setState({detailItem: this.state.data[index - 1]}, this.updateSelectedAndUrl);
       } else if (event.keyCode === 40 && index < this.state.totalRecords - 1) {
         // Arrow Down
-        this.setState({detailItem: this.state.data[index + 1]});
+        this.setState({detailItem: this.state.data[index + 1]}, this.updateSelectedAndUrl);
       }
     }
   };
@@ -249,7 +249,7 @@ class MasterDetail extends Component {
 
   onRowClicked = item => {
     if (this.mobile) {
-      this.props.history.push('/devices/' + item.id);
+      this.props.history.push(this.props.location.pathname + '/' + item.id);
     } else {
       let newQuery = queryString.parse(this.props.location.search);
       if (item === this.state.detailItem) {
@@ -272,18 +272,27 @@ class MasterDetail extends Component {
   };
 
   updateSelectedAndUrl = selected => {
-    this.setState({selected: selected});
     let newQuery = queryString.parse(this.props.location.search);
-    const selectedIds = this.buildIdList(selected);
-    if (selectedIds) {
-      newQuery.selected = selectedIds;
+    if (selected) {
+      const selectedIds = this.buildIdList(selected);
+      if (selectedIds) {
+        newQuery.selected = selectedIds;
+      } else {
+        delete newQuery.selected;
+      }
+    }
+    if (this.state.detailItem) {
+      newQuery.detail = this.state.detailItem.id;
     } else {
-      delete newQuery.selected;
+      delete newQuery.detail;
     }
     this.props.history.replace({
       search: queryString.stringify(newQuery, {encode: false}),
     });
-    this.props.selectionChangedCallback(selected);
+    if (selected) {
+      this.setState({selected: selected});
+      this.props.selectionChangedCallback(selected);
+    }
   };
 
   buildIdList = selected => {
@@ -314,7 +323,7 @@ class MasterDetail extends Component {
   };
 
   clearDetails = () => {
-    this.setState({detailItem: null});
+    this.setState({detailItem: null}, this.updateSelectedAndUrl);
     if (this.props.useOverlay && this.overlayPanel) {
       this.overlayPanel.hide();
     }
