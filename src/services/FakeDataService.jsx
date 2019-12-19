@@ -19,11 +19,12 @@ class FakeDataService extends React.Component {
   };
 
   get = id => {
-    this.fakeData.forEach(item => {
-      if (id === this.fakeData.id) {
-        return Promise.resolve(item);
+    id = typeof id === 'string' ? parseInt(id) : id;
+    for (let i = 0; i < this.fakeData.length; i++) {
+      if (this.fakeData[i].id === id) {
+        return Promise.resolve(this.fakeData[i]);
       }
-    });
+    }
     return Promise.reject('No such Id');
   };
 

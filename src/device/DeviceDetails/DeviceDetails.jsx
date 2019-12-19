@@ -4,6 +4,8 @@ import Moment from 'react-moment';
 import {withRouter} from 'react-router-dom';
 import LabeledButton from '../../components/LabeledButton/LabeledButton';
 import KeyValuePanel from '../../components/KeyValuePanel/KeyValuePanel';
+import FakeDataService from './../../services/FakeDataService';
+import WaitSpinner from './../../components/WaitSpinner/WaitSpinner';
 
 class DeviceDetails extends Component {
   panelStyle = {
@@ -30,6 +32,12 @@ class DeviceDetails extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      itemData: this.props.itemData,
+    };
+    if (!this.props.itemData) {
+      this.dataService = new FakeDataService();
+    }
     this.onClose = this.onClose.bind(this);
     this.escFunction = this.escFunction.bind(this);
   }
@@ -73,9 +81,20 @@ class DeviceDetails extends Component {
 
   render() {
     const mobile = this.props.location.pathname.startsWith('/device/');
-    const device = this.props.itemData;
-    if (!device) {
+    const device = this.props.itemId ? this.state.itemData : this.props.itemData;
+    if (!device && !this.props.itemId) {
       return null;
+    }
+    if (!device && this.props.itemId) {
+      this.dataService.get(this.props.itemId).then(
+        response => {
+          this.setState({itemData: response});
+        },
+        reason => {
+          return {reason};
+        }
+      );
+      return <WaitSpinner></WaitSpinner>;
     }
     return (
       <div style={this.panelStyle}>
@@ -164,8 +183,10 @@ DeviceDetails.defaultProps = {
 };
 
 DeviceDetails.propTypes = {
-  /** The background color to use when selected */
-  itemData: PropTypes.object.isRequired,
+  /** The data object for this device */
+  itemData: PropTypes.object,
+  /** Id of item to be fetched. Optional way to pass in data */
+  itemId: PropTypes.string,
   /** Function to call back when the close button is clicked */
   onClose: PropTypes.func,
 };

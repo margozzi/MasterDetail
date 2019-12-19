@@ -190,7 +190,7 @@ class MasterDetail extends Component {
   render() {
     const detailPanel = React.Children.map(this.props.children, child => {
       return React.cloneElement(child, {
-        itemData: this.state.detailItem || {},
+        itemData: this.state.detailItem,
         onClose: this.clearDetails,
       });
     });
@@ -321,7 +321,7 @@ class MasterDetail extends Component {
 
   clearDetails = () => {
     this.setState({detailItem: null});
-    if (this.props.useOverlay) {
+    if (this.props.useOverlay && this.overlayPanel) {
       this.overlayPanel.hide();
     }
   };
