@@ -20,6 +20,7 @@ class ResponsiveTable extends Component {
       <Summary
         itemData={item}
         idField={this.props.idField}
+        nameField={this.props.nameField}
         line1Field={this.props.line1Field}
         line2Field={this.props.line2Field}
         line3Field={this.props.line3Field}
@@ -146,7 +147,7 @@ class ResponsiveTable extends Component {
     return (
       <SelectionButton
         size="medium"
-        nameField="user"
+        nameField={this.props.nameField}
         itemData={item}
         selected={this.props.selected.includes(item)}
         onClick={this.onRowSelection}
@@ -181,6 +182,8 @@ ResponsiveTable.propTypes = {
   data: PropTypes.array.isRequired,
   /** Id field that is unique per dat record */
   idField: PropTypes.string.isRequired,
+  /** The property name used to create the initials in the select button */
+  nameField: PropTypes.string.isRequired,
   /** Most prominant summary field to display in mobile size*/
   line1Field: PropTypes.string.isRequired,
   /** Second summary field to display in mobile size*/

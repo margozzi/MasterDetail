@@ -19,6 +19,8 @@ class App extends Component {
   render() {
     const Devices = lazy(() => import('./device/Devices/Devices'));
     const DeviceDetails = lazy(() => import('./device/DeviceDetails/DeviceDetails'));
+    const Users = lazy(() => import('./user/Users/Users'));
+    const UserDetails = lazy(() => import('./user/UserDetails/UserDetails'));
     const NotFound = lazy(() => import('./components/NotFound'));
 
     return (
@@ -26,11 +28,16 @@ class App extends Component {
         <BrowserRouter>
           <Suspense fallback={<WaitSpinner />}>
             <Switch>
-              <Route exact path="/" render={props => <Redirect to={{pathname: '/devices', state: {from: '/'}}} />} />
+              <Route exact path="/" render={props => <Redirect to={{pathname: '/users', state: {from: '/'}}} />} />
               <Route exact path="/devices" render={props => <Devices></Devices>} />
               <Route
                 path="/devices/:id"
                 render={props => <DeviceDetails itemId={props.match.params.id} itemData={null} showClose={false} />}
+              />
+              <Route exact path="/users" render={props => <Users></Users>} />
+              <Route
+                path="/users/:id"
+                render={props => <UserDetails itemId={props.match.params.id} itemData={null} showClose={false} />}
               />
               {/* when none of the above match */}
               <Route component={NotFound} />

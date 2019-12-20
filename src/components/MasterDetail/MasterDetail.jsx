@@ -211,9 +211,10 @@ class MasterDetail extends Component {
                 ></ResponsiveHeader>
                 <ResponsiveTable
                   data={this.state.data}
-                  line1Field="user"
-                  line2Field="mac"
-                  line3Field="name"
+                  nameField={this.props.nameField}
+                  line1Field={this.props.line1Field}
+                  line2Field={this.props.line2Field}
+                  line3Field={this.props.line3Field}
                   columnModel={this.props.columnModel}
                   breakpoints={this.props.breakpoints}
                   breakpointColumns={this.props.breakpointColumns}
@@ -398,9 +399,20 @@ MasterDetail.propTypes = {
   menuProvider: PropTypes.object,
   /** Callback when row selection has changed  */
   selectionChangedCallback: PropTypes.func,
+  /** Id field that is unique per dat record */
+  idField: PropTypes.string,
+  /** The property name used to create the initials in the select button */
+  nameField: PropTypes.string,
+  /** Most prominant summary field to display in mobile size*/
+  line1Field: PropTypes.string.isRequired,
+  /** Second summary field to display in mobile size*/
+  line2Field: PropTypes.string,
+  /**Third summary field to display in mobile size*/
+  line3Field: PropTypes.string,
 };
 
 MasterDetail.defaultProps = {
+  idField: 'id',
   breakpoints: [480, 839, 1024],
   breakpointColumns: [3, 6, 9],
   useOverlay: true,

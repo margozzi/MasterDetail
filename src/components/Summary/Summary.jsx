@@ -60,7 +60,7 @@ class Summary extends Component {
         <div className="p-col-fixed">
           <SelectionButton
             selected={this.state.selected}
-            nameField="user"
+            nameField={this.props.nameField}
             itemData={this.props.itemData}
             onClick={this.handleSelection}
           ></SelectionButton>
@@ -91,6 +91,8 @@ Summary.defaultProps = {
 Summary.propTypes = {
   /** The data object to be used to grab values from */
   itemData: PropTypes.object.isRequired,
+  /** The property name used to create the initials in the select button */
+  nameField: PropTypes.string.isRequired,
   /** The property name to be used to get an id for this object. */
   idField: PropTypes.string.isRequired,
   /** The propery name to be used for the 1st line of the summary */

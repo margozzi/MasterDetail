@@ -47,6 +47,10 @@ class Devices extends Component {
           dataService={this.deviceDataService}
           menuProvider={this}
           selectionChangedCallback={this.onSelectionChanged}
+          nameField="user"
+          line1Field="user"
+          line2Field="mac"
+          line3Field="name"
         >
           <DeviceDetails></DeviceDetails>
         </MasterDetail>
