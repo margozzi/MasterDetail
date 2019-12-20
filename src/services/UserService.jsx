@@ -9,7 +9,7 @@ class UserService extends React.Component {
     if (config) {
       this.config = {...this.config, ...config}; // Merge
     }
-    const params = config.filter ? {name: config.filter} : {};
+    const params = config && config.filter ? {name: config.filter} : {};
     return axios
       .get('/users', {
         params: params,

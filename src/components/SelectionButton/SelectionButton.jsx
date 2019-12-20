@@ -148,7 +148,7 @@ class SelectionButton extends Component {
 
   calculateColor = str => {
     var hash = this.hashCode(str) % 16;
-    return this.colors[hash];
+    return this.colors[Math.abs(hash)];
   };
 }
 
