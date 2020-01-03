@@ -1,5 +1,5 @@
 import React, {Component, Suspense, lazy} from 'react';
-import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 // Prime React related
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -7,6 +7,7 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
 import WaitSpinner from './components/WaitSpinner/WaitSpinner';
+import Home from './components/Home/Home';
 
 class App extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class App extends Component {
         <BrowserRouter>
           <Suspense fallback={<WaitSpinner />}>
             <Switch>
-              <Route exact path="/" render={props => <Redirect to={{pathname: '/users', state: {from: '/'}}} />} />
+              <Route exact path="/" component={Home} />
               <Route exact path="/devices" render={props => <Devices></Devices>} />
               <Route
                 path="/devices/:id"
