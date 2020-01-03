@@ -1,6 +1,5 @@
 import {PropTypes} from 'prop-types';
 import React, {Component} from 'react';
-import Moment from 'react-moment';
 import KeyValuePanel from '../../components/KeyValuePanel/KeyValuePanel';
 import UserService from './../../services/UserService';
 import WaitSpinner from './../../components/WaitSpinner/WaitSpinner';
@@ -23,25 +22,6 @@ class UserDetails extends Component {
     this.escFunction = this.escFunction.bind(this);
   }
 
-  buildValues = device => {
-    var userUrl = '/user/' + device.userId;
-    var roleUrl = '/role/' + device.roleId;
-    var values = [];
-    values.push(device.enabled ? 'Yes' : 'No');
-    values.push(
-      <>
-        <a href={userUrl}>{device.user}</a> (<a href={roleUrl}>{device.role}</a>)
-      </>
-    );
-    values.push(device.name);
-    var cred = device.credentials;
-    cred += cred === 'certificate' ? ' (expires in 234 days)' : '';
-    values.push(cred);
-    values.push(<Moment date={device.added} />);
-    values.push(<Moment date={device.lastSeen} />);
-    return values;
-  };
-
   onClose = () => {
     this.props.onClose();
   };
@@ -61,11 +41,11 @@ class UserDetails extends Component {
   }
 
   render() {
-    const device = this.props.itemId ? this.state.itemData : this.props.itemData;
-    if (!device && !this.props.itemId) {
+    const user = this.props.itemId != null ? this.state.itemData : this.props.itemData;
+    if (!user && !this.props.itemId) {
       return null;
     }
-    if (!device && this.props.itemId) {
+    if (!user && this.props.itemId) {
       this.dataService.get(this.props.itemId).then(
         response => {
           this.setState({itemData: response});
@@ -81,7 +61,7 @@ class UserDetails extends Component {
         {/* Header */}
         <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
           <div className="p-col-fixed" style={{fontSize: '24px', marginRight: '40px'}}>
-            User Details
+            User Details ({user.id})
           </div>
           <div className="p-col" style={{width: '100%'}} />
           {this.props.showClose && (
@@ -92,26 +72,47 @@ class UserDetails extends Component {
             ></i>
           )}
         </div>
-
         {/* Properties */}
-        <div style={{fontSize: '18px'}}>
-          {device.manufacturer} {device.type} {device.model} ({device.mac})
-        </div>
         <div style={{margin: '20px'}}>
           <KeyValuePanel
-            labels={['Enabled', 'User', 'Name', 'Credentials', 'Added', 'Last Seen']}
-            values={this.buildValues(device)}
+            labels={['Name', 'User Name', 'e-mail', 'Address', 'Phone Number', 'Web Site', 'Company']}
+            values={this.buildValues(user)}
           ></KeyValuePanel>
         </div>
       </div>
     );
   }
+
+  buildValues = user => {
+    var values = [];
+    values.push(user.name);
+    values.push(user.username);
+    values.push(user.email);
+    values.push(
+      <>
+        <div>{user.address.street}</div>
+        <div>{user.address.suite}</div>
+        <div>{user.address.city}</div>
+        <div>{user.address.zipcode}</div>
+      </>
+    );
+    values.push(user.phone);
+    values.push(<a href={user.website}>{user.website}</a>);
+    values.push(
+      <>
+        <div>{user.company.name}</div>
+        <div>{user.company.catchPhrase}</div>
+        <div>{user.company.bs}</div>
+      </>
+    );
+    return values;
+  };
 }
 
 export default UserDetails;
 
 UserDetails.propTypes = {
-  /** The data object for this device */
+  /** The data object for this user */
   itemData: PropTypes.object,
   /** Id of item to be fetched. Optional way to pass in data */
   itemId: PropTypes.string,
