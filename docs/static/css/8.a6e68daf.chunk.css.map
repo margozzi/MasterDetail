@@ -1,0 +1,1 @@
+{"version":3,"sources":["ColumnFormatter.css"],"names":[],"mappings":"AAAA,KACE,SACF,CAEA,OACE,WACF,CAEA,QACE,iBACF","file":"8.a6e68daf.chunk.css","sourcesContent":[".red {\n  color: red\n}\n\n.green {\n  color: green\n}\n\n.center {\n  text-align: center\n}"]}
