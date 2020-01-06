@@ -3,6 +3,8 @@ import MasterDetail from '../../components/MasterDetail/MasterDetail';
 import DeviceDetails from '../DeviceDetails/DeviceDetails';
 import ColumnFormatter from '../../services/ColumnFormatter';
 import FakeDataService from '../../services/FakeDataService';
+import queryString from 'query-string';
+import {withRouter} from 'react-router-dom';
 
 class Devices extends Component {
   constructor(props) {
@@ -51,12 +53,21 @@ class Devices extends Component {
           line1Field="user"
           line2Field="mac"
           line3Field="name"
+          useOverlay={this.useOverlay()}
         >
           <DeviceDetails></DeviceDetails>
         </MasterDetail>
       </div>
     );
   }
+
+  useOverlay = () => {
+    const query = queryString.parse(this.props.location.search);
+    if (query.useOverlay) {
+      return query.useOverlay === 'false' ? false : true;
+    }
+    return true;
+  };
 
   buildMenu = selected => {
     let actions;
@@ -108,4 +119,4 @@ class Devices extends Component {
   };
 }
 
-export default Devices;
+export default withRouter(Devices);

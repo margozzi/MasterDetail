@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import MasterDetail from '../../components/MasterDetail/MasterDetail';
 import UserDetails from '../UserDetails/UserDetails';
 import UserService from '../../services/UserService';
+import queryString from 'query-string';
+import {withRouter} from 'react-router-dom';
 
 class Users extends Component {
   constructor(props) {
@@ -34,12 +36,21 @@ class Users extends Component {
           line1Field="name"
           line2Field="username"
           line3Field="email"
+          useOverlay={this.useOverlay()}
         >
           <UserDetails></UserDetails>
         </MasterDetail>
       </div>
     );
   }
+
+  useOverlay = () => {
+    const query = queryString.parse(this.props.location.search);
+    if (query.useOverlay) {
+      return query.useOverlay === 'false' ? false : true;
+    }
+    return true;
+  };
 }
 
-export default Users;
+export default withRouter(Users);
