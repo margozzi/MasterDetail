@@ -2,7 +2,7 @@
   "name": "responsive",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://margozzi.github.io/MasterDetail",
+  "homepage": ".",
   "proxy": "https://jsonplaceholder.typicode.com",
   "dependencies": {
     "axios": "^0.19.0",
