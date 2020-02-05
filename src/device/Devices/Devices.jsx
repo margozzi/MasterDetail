@@ -54,6 +54,7 @@ class Devices extends Component {
           line2Field="mac"
           line3Field="name"
           useOverlay={this.useOverlay()}
+          detailWidth={450}
         >
           <DeviceDetails></DeviceDetails>
         </MasterDetail>

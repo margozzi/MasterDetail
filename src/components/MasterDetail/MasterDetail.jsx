@@ -168,8 +168,9 @@ class MasterDetail extends Component {
     }
   };
 
-  getSize = width => {
+  getSize = (width, inlineDetail) => {
     let breakpoints = this.props.breakpoints;
+    width = inlineDetail ? width - this.props.detailWidth : width;
     if (width < breakpoints[0]) {
       return 'mobile';
     } else if (width >= breakpoints[0] && width < breakpoints[1]) {
@@ -193,12 +194,14 @@ class MasterDetail extends Component {
       <ResizeDetector
         handleWidth
         render={({width}) => {
-          const size = this.getSize(width);
-          this.mobile = size === 'mobile';
-          const flexBasis = this.props.breakpoints[0] + 'px';
+          console.log('Width: ' + width);
+          const inlineDetail = this.state.detailItem && !this.props.useOverlay;
+          const size = this.getSize(width, inlineDetail);
+          this.mobile = size === 'mobile' && !this.state.detailItem;
+          const flexBasis = this.mobile ? null : this.props.breakpoints[0] + 'px';
           return (
-            <div className="p-grid p-nogutter" style={size !== 'small' ? {flexWrap: 'nowrap'} : {}}>
-              <div className="p-col" style={{flexBasis: flexBasis}}>
+            <div className="p-grid p-nogutter" style={{flexWrap: 'nowrap'}}>
+              <div className="p-col" style={{flexGrow: 1, flexShrink: 0, flexBasis: flexBasis}}>
                 <ResponsiveHeader
                   label="Devices"
                   initialSearchString={this.state.initialSearchString}
@@ -225,7 +228,15 @@ class MasterDetail extends Component {
                 ></ResponsiveTable>
               </div>
               {this.state.detailItem && !this.mobile && !this.props.useOverlay && (
-                <div className="p-col" style={{flexBasis: '500px', minWidth: '300px', maxWidth: '600px'}}>
+                <div
+                  className="p-col detail-highlight"
+                  style={{
+                    minWidth: this.props.detailWidth,
+                    flexGrow: 0,
+                    flexShrink: 1,
+                    flexBasis: this.props.detailWidth,
+                  }}
+                >
                   {detailPanel}
                 </div>
               )}
@@ -391,6 +402,8 @@ MasterDetail.propTypes = {
   breakpointColumns: PropTypes.array,
   /** Use an overlay panel to show detail, else inline. Defaults to false */
   useOverlay: PropTypes.bool,
+  /** If not using overlay specify a width for the detail */
+  detailWidth: PropTypes.number,
   /** Data Service. Used to fatch data */
   dataService: PropTypes.object.isRequired,
   /** Should a confirmation dialog be shown before deleting */
@@ -416,6 +429,7 @@ MasterDetail.defaultProps = {
   breakpoints: [480, 839, 1024],
   breakpointColumns: [3, 6, 9],
   useOverlay: true,
+  detailWidth: 500,
   confirmDelete: true,
   selectionChangedCallback: () => {},
 };

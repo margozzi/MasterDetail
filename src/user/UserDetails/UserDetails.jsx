@@ -6,7 +6,6 @@ import WaitSpinner from './../../components/WaitSpinner/WaitSpinner';
 
 class UserDetails extends Component {
   panelStyle = {
-    backgroundColor: 'white',
     marginLeft: '20px',
   };
 

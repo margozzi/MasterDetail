@@ -8,7 +8,6 @@ import WaitSpinner from './../../components/WaitSpinner/WaitSpinner';
 
 class DeviceDetails extends Component {
   panelStyle = {
-    backgroundColor: 'white',
     marginLeft: '20px',
   };
 

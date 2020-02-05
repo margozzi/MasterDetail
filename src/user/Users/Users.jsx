@@ -37,6 +37,7 @@ class Users extends Component {
           line2Field="username"
           line3Field="email"
           useOverlay={this.useOverlay()}
+          detailWidth={400}
         >
           <UserDetails></UserDetails>
         </MasterDetail>
