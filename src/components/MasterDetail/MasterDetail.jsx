@@ -194,7 +194,9 @@ class MasterDetail extends Component {
       <ResizeDetector
         handleWidth
         render={({width}) => {
-          console.log('Width: ' + width);
+          if (!width) {
+            return <div></div>;
+          }
           const inlineDetail = this.state.detailItem && !this.props.useOverlay;
           const size = this.getSize(width, inlineDetail);
           this.mobile = size === 'mobile' && !this.state.detailItem;
