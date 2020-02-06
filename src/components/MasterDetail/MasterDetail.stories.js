@@ -8,7 +8,6 @@ import {HashRouter} from 'react-router-dom';
 
 const deviceDataService = new FakeDataService();
 const breakpoints = [600, 1000, 1500];
-
 const breakpointColumns = [3, 7, 12];
 
 const columnModel = [

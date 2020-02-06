@@ -2,95 +2,16 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import Summary from './Summary';
+import FakeDataService from './../../services/FakeDataService';
 
-var data = [
-  {
-    id: 1,
-    user: 'Mike Margozzi',
-    role: 'student',
-    manufacturer: 'Samsung',
-    type: 'Galaxy',
-    model: 'S8',
-    mac: '11:22:33:44:55:66',
-    name: 'Personal cell phone',
-    status: 'online',
-    credentials: 'certificate',
-    enabled: true,
-    active: true,
-    added: 1564076127000,
-    expires: 1538523327000,
-  },
-  {
-    id: 2,
-    user: 'Mike Margozzi',
-    role: 'student',
-    manufacturer: 'Apple',
-    type: 'iPhone',
-    model: 'X',
-    mac: '22:33:44:55:66:77',
-    name: 'Work cell phone',
-    status: 'online',
-    credentials: 'certificate',
-    enabled: true,
-    active: true,
-    added: 0,
-    expires: 0,
-  },
-  {
-    id: 3,
-    user: 'Mike Margozzi',
-    role: 'student',
-    manufacturer: 'Roku',
-    type: 'Streaming Stick',
-    model: '3800',
-    mac: '33:44:55:66:77:88',
-    name: 'Livingroom Roku',
-    status: 'offline',
-    credentials: 'MPSK',
-    enabled: true,
-    active: true,
-    added: 0,
-    expires: 0,
-  },
-  {
-    id: 4,
-    user: 'Craig Stone',
-    role: 'faculty',
-    manufacturer: 'Roku',
-    type: 'Streaming Stick',
-    model: '3800',
-    mac: '44:55:66:77:88:99',
-    name: 'Bedroom Roku',
-    status: 'online',
-    credentials: 'MPSK',
-    enabled: true,
-    active: true,
-    added: 0,
-    expires: 0,
-  },
-  {
-    id: 5,
-    user: 'Craig Stone',
-    role: 'faculty',
-    manufacturer: 'Apple',
-    type: 'iPhone',
-    model: '5',
-    mac: '55:66:77:88:99:aa',
-    name: 'Personal cell phone',
-    status: 'online',
-    credentials: 'certificate',
-    enabled: true,
-    active: true,
-    added: 0,
-    expires: 0,
-  },
-];
+const fakeDataService = new FakeDataService();
 
 storiesOf('Summary', module)
   .add('One Unslected', () => (
     <Summary
       id="123456"
-      itemData={data[0]}
+      itemData={fakeDataService.fakeData[0]}
+      nameField="user"
       line1Field="user"
       line2Field="mac"
       line3Field="name"
@@ -101,7 +22,8 @@ storiesOf('Summary', module)
   .add('One Selected', () => (
     <Summary
       id="123456"
-      itemData={data[0]}
+      itemData={fakeDataService.fakeData[0]}
+      nameField="user"
       line1Field="user"
       line2Field="mac"
       line3Field="name"
@@ -114,7 +36,8 @@ storiesOf('Summary', module)
     <>
       <Summary
         idField="id"
-        itemData={data[0]}
+        itemData={fakeDataService.fakeData[0]}
+        nameField="user"
         line1Field="user"
         line2Field="mac"
         line3Field="name"
@@ -123,7 +46,8 @@ storiesOf('Summary', module)
       ></Summary>
       <Summary
         idField="id"
-        itemData={data[1]}
+        itemData={fakeDataService.fakeData[1]}
+        nameField="user"
         line1Field="user"
         line2Field="mac"
         line3Field="name"
@@ -132,7 +56,8 @@ storiesOf('Summary', module)
       ></Summary>
       <Summary
         idField="id"
-        itemData={data[2]}
+        itemData={fakeDataService.fakeData[2]}
+        nameField="user"
         line1Field="user"
         line2Field="mac"
         line3Field="name"
@@ -141,7 +66,8 @@ storiesOf('Summary', module)
       ></Summary>
       <Summary
         idField="id"
-        itemData={data[3]}
+        itemData={fakeDataService.fakeData[3]}
+        nameField="user"
         line1Field="user"
         line2Field="mac"
         line3Field="name"
@@ -150,7 +76,8 @@ storiesOf('Summary', module)
       ></Summary>
       <Summary
         idField="id"
-        itemData={data[4]}
+        itemData={fakeDataService.fakeData[4]}
+        nameField="user"
         line1Field="user"
         line2Field="mac"
         line3Field="name"
