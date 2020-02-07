@@ -106,6 +106,9 @@ class ResponsiveTable extends Component {
       <ResizeDetector
         handleWidth
         render={({width}) => {
+          if (!width) {
+            return <div></div>;
+          }
           const size = this.getSize(width);
           const mobile = size === 'mobile';
           return (

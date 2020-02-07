@@ -25,7 +25,9 @@ class MasterDetail extends Component {
       searchString: '',
       initialSearchString: '',
     };
-    this.props.dataService.setReloadCallback(this.load);
+    if (this.props.dataService) {
+      this.props.dataService.setReloadCallback(this.load);
+    }
     this.onRowClicked = this.onRowClicked.bind(this);
     this.onSummarySelection = this.onSummarySelection.bind(this);
     this.deleteSelected = this.deleteSelected.bind(this);
@@ -130,24 +132,26 @@ class MasterDetail extends Component {
   componentDidMount = () => {
     document.addEventListener('keydown', this.keyboardNav, false);
     const initialSearchString = this.getInitialSearch();
-    this.props.dataService
-      .list({filter: initialSearchString})
-      .then(response => {
-        const detailItem = this.getInitialDetail(response);
-        const selected = this.getInitialSelection(response);
-        this.setState({
-          data: response,
-          totalRecords: response.length,
-          selected: selected,
-          detailItem: detailItem,
-          initialSearchString: initialSearchString,
-        });
-        this.props.selectionChangedCallback(selected);
-        if (this.overlayPanel && detailItem) {
-          this.overlayPanel.show(detailItem);
-        }
-      })
-      .catch(error => console.log(error));
+    if (this.props.dataService) {
+      this.props.dataService
+        .list({filter: initialSearchString})
+        .then(response => {
+          const detailItem = this.getInitialDetail(response);
+          const selected = this.getInitialSelection(response);
+          this.setState({
+            data: response,
+            totalRecords: response.length,
+            selected: selected,
+            detailItem: detailItem,
+            initialSearchString: initialSearchString,
+          });
+          this.props.selectionChangedCallback(selected);
+          if (this.overlayPanel && detailItem) {
+            this.overlayPanel.show(detailItem);
+          }
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   componentWillUnmount = () => {
@@ -352,16 +356,18 @@ class MasterDetail extends Component {
   };
 
   deleteSelected = () => {
-    this.props.dataService
-      .delete(this.state.selected)
-      .then(() => {
-        this.confirmDialog.current.setVisible(false);
-        this.load();
-        this.clearSelection();
-      })
-      .catch(reason => {
-        alert(reason);
-      });
+    if (this.props.dataService) {
+      this.props.dataService
+        .delete(this.state.selected)
+        .then(() => {
+          this.confirmDialog.current.setVisible(false);
+          this.load();
+          this.clearSelection();
+        })
+        .catch(reason => {
+          alert(reason);
+        });
+    }
   };
 
   onSummarySelection = (selected, item) => {
@@ -380,12 +386,14 @@ class MasterDetail extends Component {
   };
 
   load = config => {
-    this.props.dataService.list(config).then(response => {
-      this.setState({
-        data: response,
-        totalRecords: response.length,
+    if (this.props.dataService) {
+      this.props.dataService.list(config).then(response => {
+        this.setState({
+          data: response,
+          totalRecords: response.length,
+        });
       });
-    });
+    }
   };
 }
 
@@ -407,7 +415,7 @@ MasterDetail.propTypes = {
   /** If not using overlay specify a width for the detail */
   detailWidth: PropTypes.number,
   /** Data Service. Used to fatch data */
-  dataService: PropTypes.object.isRequired,
+  dataService: PropTypes.object,
   /** Should a confirmation dialog be shown before deleting */
   confirmDelete: PropTypes.bool,
   /** Menu provider to help build the menu and flex based on selection */

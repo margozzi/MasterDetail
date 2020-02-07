@@ -19,6 +19,7 @@ Example Summary:
     expires: 1538523327000,
   }}
   idField="id"
+  nameField="user"
   line1Field="user"
   line2Field="name"
   line3Field="mac"
