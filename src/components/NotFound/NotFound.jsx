@@ -1,5 +1,5 @@
 import React from 'react';
-import image from '../resources/images/404ErrorFunny.jpg';
+import image from '../../resources/images/404ErrorFunny.jpg';
 
 class NotFound extends React.Component {
   render() {

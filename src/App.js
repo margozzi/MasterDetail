@@ -7,7 +7,7 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
 import WaitSpinner from './components/WaitSpinner/WaitSpinner';
-import Home from './components/Home/Home';
+import Home from './Home/Home';
 
 class App extends Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class App extends Component {
     const DeviceDetails = lazy(() => import('./device/DeviceDetails/DeviceDetails'));
     const Users = lazy(() => import('./user/Users/Users'));
     const UserDetails = lazy(() => import('./user/UserDetails/UserDetails'));
-    const NotFound = lazy(() => import('./components/NotFound'));
+    const NotFound = lazy(() => import('./components/NotFound/NotFound'));
 
     return (
       <div>

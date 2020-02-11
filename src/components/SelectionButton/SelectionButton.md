@@ -1,5 +1,5 @@
 Example selection button:
 
 ```jsx
-<SelectionButton initials="AZ" bgColor="blue" onClick={() => {}}/>
+<SelectionButton initials="AZ" bgColor="lightgreen" onClick={() => {}} />
 ```

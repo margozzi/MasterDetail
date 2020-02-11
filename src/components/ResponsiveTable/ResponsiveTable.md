@@ -1,14 +1,13 @@
-Example Master Detail:
+Example Responsive Table
 
 ```jsx
-import DeviceDetails from '../../device/DeviceDetails/DeviceDetails';
+import ResponsiveTable from './ResponsiveTable';
 import ColumnFormatter from '../../services/ColumnFormatter';
 import FakeDataService from '../../services/FakeDataService';
-import {MemoryRouter} from 'react-router-dom';
 
-const fakeDataService = new FakeDataService();
 const breakpoints = [600, 1000, 1500];
 const breakpointColumns = [3, 7, 12];
+const fakeDataService = new FakeDataService();
 
 const columnModel = [
   {field: 'user', header: 'User', width: 140},
@@ -30,20 +29,17 @@ const columnModel = [
     formatter: new ColumnFormatter({field: 'expires'}).dateFromNowTemplate,
   },
 ];
-
-<MemoryRouter>
-  <MasterDetail
-    label="Devices"
-    breakpoints={breakpoints}
-    breakpointColumns={breakpointColumns}
-    columnModel={columnModel}
-    nameField="user"
-    line1Field="user"
-    line2Field="mac"
-    line3Field="name"
-    useOverlay={false}
-    detailWidth={450}
-    data={fakeDataService.fakeData}
-  ></MasterDetail>
-</MemoryRouter>;
+<ResponsiveTable
+  breakpoints={breakpoints}
+  breakpointColumns={breakpointColumns}
+  columnModel={columnModel}
+  data={fakeDataService.fakeData}
+  idField="id"
+  nameField="user"
+  line1Field="user"
+  line2Field="mac"
+  line3Field="name"
+  rowClickCallback={() => alert('row clicked')}
+  selectionChangeCallback={() => alert('selection changed')}
+/>;
 ```

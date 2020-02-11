@@ -403,7 +403,7 @@ MasterDetail.propTypes = {
   /** The label to be used to identify the array of data */
   label: PropTypes.string.isRequired,
   /** An array of data that will be used in the master table and the details panel */
-  // data: PropTypes.array.isRequired,
+  data: PropTypes.array,
   /** Column Model to be used on the PrimeReact DataTable */
   columnModel: PropTypes.array.isRequired,
   /** Widths at which the table should respond */

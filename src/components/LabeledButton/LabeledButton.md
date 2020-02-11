@@ -3,7 +3,7 @@ Example Labeled Button:
 ```jsx
 <LabeledButton
   iconName="question"
-  label="Huh?"
+  label="Help"
   onClick={() => {
     alert('Clicked');
   }}
