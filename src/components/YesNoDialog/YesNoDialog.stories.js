@@ -4,23 +4,27 @@ import {action} from '@storybook/addon-actions';
 import {Button} from 'primereact/button';
 import YesNoDialog from './YesNoDialog';
 
-let visible = false;
+let confirmDialog;
+
 storiesOf('YesNoDialog', module).add('Visible', () => (
   <>
     <Button
       label="Show"
       icon="pi pi-check"
       onClick={() => {
-        visible = true;
+        confirmDialog.setVisible(true);
       }}
     />
     <YesNoDialog
-      visible={visible}
+      ref={ref => {
+        confirmDialog = ref;
+      }}
       modal={false}
       header="Dangerous Question"
       message="Does this dress make me look fat?"
       callBack={button => {
-        action('You clicked on ' + button);
+        action('You clicked on Yes');
+        confirmDialog.setVisible(false);
       }}
     ></YesNoDialog>
   </>

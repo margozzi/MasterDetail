@@ -10,16 +10,18 @@ let confirmDialog;
     label="Show"
     icon="pi pi-check"
     onClick={() => {
-      confirmDialog.current.setVisible(true);
+      confirmDialog.setVisible(true);
     }}
   />
   <YesNoDialog
-    ref={ref => (confirmDialog = ref)}
+    ref={ref => {
+      confirmDialog = ref;
+    }}
     modal={false}
     header="Dangerous Question"
     message="Does this dress make me look fat?"
     callBack={button => {
-      action('You clicked on ' + button);
+      alert('You clicked on Yes');
     }}
   ></YesNoDialog>
 </>;
