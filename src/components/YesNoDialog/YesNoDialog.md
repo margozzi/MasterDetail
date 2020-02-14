@@ -22,6 +22,7 @@ let confirmDialog;
     message="Does this dress make me look fat?"
     callBack={button => {
       alert('You clicked on Yes');
+      confirmDialog.setVisible(false);
     }}
   ></YesNoDialog>
 </>;
