@@ -10,9 +10,12 @@ class UserService extends React.Component {
       this.config = {...this.config, ...config}; // Merge
     }
     const params = config && config.filter ? {name: config.filter} : {};
+    const headers = {'Access-Control-Allow-Origin': '*'};
+
     return axios
       .get('https://jsonplaceholder.typicode.com/users', {
         params: params,
+        headers: headers,
       })
       .then(res => res.data);
   };

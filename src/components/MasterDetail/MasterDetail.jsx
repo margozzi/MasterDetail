@@ -8,6 +8,7 @@ import YesNoDialog from '../YesNoDialog/YesNoDialog';
 import ResponsiveTable from '../ResponsiveTable/ResponsiveTable';
 import ResponsiveHeader from '../ResponsiveHeader/ResponsiveHeader';
 import './MasterDetail.css';
+import WaitSpinner from './../WaitSpinner/WaitSpinner';
 
 class MasterDetail extends Component {
   // Is the current width considered 'mobile' size?
@@ -18,6 +19,7 @@ class MasterDetail extends Component {
     this.label = React.createRef();
     this.confirmDialog = React.createRef();
     this.state = {
+      loading: false,
       selected: [],
       data: [],
       totalRecords: 0,
@@ -139,6 +141,7 @@ class MasterDetail extends Component {
           const detailItem = this.getInitialDetail(response);
           const selected = this.getInitialSelection(response);
           this.setState({
+            loading: false,
             data: response,
             totalRecords: response.length,
             selected: selected,
@@ -150,7 +153,11 @@ class MasterDetail extends Component {
             this.overlayPanel.show(detailItem);
           }
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          console.log(error);
+          this.setState({loading: false});
+        });
+      this.setState({loading: true});
     }
   };
 
@@ -206,59 +213,62 @@ class MasterDetail extends Component {
           this.mobile = size === 'mobile' && !this.state.detailItem;
           const flexBasis = this.mobile ? null : this.props.breakpoints[0] + 'px';
           return (
-            <div className="p-grid p-nogutter" style={{flexWrap: 'nowrap'}}>
-              <div className="p-col" style={{flexGrow: 1, flexShrink: 0, flexBasis: flexBasis}}>
-                <ResponsiveHeader
-                  label="Devices"
-                  initialSearchString={this.state.initialSearchString}
-                  clearCallback={this.clearSelection}
-                  deleteCallback={this.onDelete}
-                  selectedCount={this.state.selected.length}
-                  searchCallback={this.onSearch}
-                  mobile={this.mobile}
-                  menuModel={this.buildMenu()}
-                ></ResponsiveHeader>
-                <ResponsiveTable
-                  data={this.state.data}
-                  nameField={this.props.nameField}
-                  line1Field={this.props.line1Field}
-                  line2Field={this.props.line2Field}
-                  line3Field={this.props.line3Field}
-                  columnModel={this.props.columnModel}
-                  breakpoints={this.props.breakpoints}
-                  breakpointColumns={this.props.breakpointColumns}
-                  selected={this.state.selected}
-                  detailItem={this.state.detailItem}
-                  selectionChangeCallback={this.updateSelectedAndUrl}
-                  rowClickCallback={this.onRowClicked}
-                ></ResponsiveTable>
-              </div>
-              {this.state.detailItem && !this.mobile && !this.props.useOverlay && (
-                <div
-                  className="p-col detail-highlight"
-                  style={{
-                    minWidth: this.props.detailWidth,
-                    flexGrow: 0,
-                    flexShrink: 1,
-                    flexBasis: this.props.detailWidth,
-                  }}
-                >
-                  {detailPanel}
+            <>
+              <div className="p-grid p-nogutter" style={{flexWrap: 'nowrap'}}>
+                <div className="p-col" style={{flexGrow: 1, flexShrink: 0, flexBasis: flexBasis}}>
+                  <ResponsiveHeader
+                    label="Devices"
+                    initialSearchString={this.state.initialSearchString}
+                    clearCallback={this.clearSelection}
+                    deleteCallback={this.onDelete}
+                    selectedCount={this.state.selected.length}
+                    searchCallback={this.onSearch}
+                    mobile={this.mobile}
+                    menuModel={this.buildMenu()}
+                  ></ResponsiveHeader>
+                  <ResponsiveTable
+                    data={this.state.data}
+                    nameField={this.props.nameField}
+                    line1Field={this.props.line1Field}
+                    line2Field={this.props.line2Field}
+                    line3Field={this.props.line3Field}
+                    columnModel={this.props.columnModel}
+                    breakpoints={this.props.breakpoints}
+                    breakpointColumns={this.props.breakpointColumns}
+                    selected={this.state.selected}
+                    detailItem={this.state.detailItem}
+                    selectionChangeCallback={this.updateSelectedAndUrl}
+                    rowClickCallback={this.onRowClicked}
+                  ></ResponsiveTable>
                 </div>
-              )}
-              <YesNoDialog
-                ref={this.confirmDialog}
-                header="Delete Selected Items?"
-                message="Are you sure you want to delete the selected items?"
-                callBack={this.deleteSelected}
-                maxWidth="370px"
-              ></YesNoDialog>
-              {!this.mobile && this.props.useOverlay && (
-                <OverlayPanel className="overlayStyle" ref={el => (this.overlayPanel = el)}>
-                  {detailPanel}
-                </OverlayPanel>
-              )}
-            </div>
+                {this.state.detailItem && !this.mobile && !this.props.useOverlay && (
+                  <div
+                    className="p-col detail-highlight"
+                    style={{
+                      minWidth: this.props.detailWidth,
+                      flexGrow: 0,
+                      flexShrink: 1,
+                      flexBasis: this.props.detailWidth,
+                    }}
+                  >
+                    {detailPanel}
+                  </div>
+                )}
+                <YesNoDialog
+                  ref={this.confirmDialog}
+                  header="Delete Selected Items?"
+                  message="Are you sure you want to delete the selected items?"
+                  callBack={this.deleteSelected}
+                  maxWidth="370px"
+                ></YesNoDialog>
+                {!this.mobile && this.props.useOverlay && (
+                  <OverlayPanel className="overlayStyle" ref={el => (this.overlayPanel = el)}>
+                    {detailPanel}
+                  </OverlayPanel>
+                )}
+              </div>
+              {this.state.loading && <WaitSpinner />}
+            </>
           );
         }}
       />
@@ -389,10 +399,12 @@ class MasterDetail extends Component {
     if (this.props.dataService) {
       this.props.dataService.list(config).then(response => {
         this.setState({
+          loading: false,
           data: response,
           totalRecords: response.length,
         });
       });
+      this.setState({loading: true});
     }
   };
 }
