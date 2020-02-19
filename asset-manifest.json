@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/MasterDetail/static/css/main.08d5e131.chunk.css",
+    "main.js": "/MasterDetail/main.85bf1cae364350c78b8e.bundle.js",
+    "main.css.map": "/MasterDetail/static/css/main.08d5e131.chunk.css.map",
+    "main.js.map": "/MasterDetail/main.85bf1cae364350c78b8e.bundle.js.map",
+    "runtime~main.js": "/MasterDetail/runtime~main.85bf1cae364350c78b8e.bundle.js",
+    "runtime~main.js.map": "/MasterDetail/runtime~main.85bf1cae364350c78b8e.bundle.js.map",
+    "vendors~main.css": "/MasterDetail/static/css/vendors~main.ab9a4431.chunk.css",
+    "vendors~main.js": "/MasterDetail/vendors~main.85bf1cae364350c78b8e.bundle.js",
+    "vendors~main.css.map": "/MasterDetail/static/css/vendors~main.ab9a4431.chunk.css.map",
+    "vendors~main.js.map": "/MasterDetail/vendors~main.85bf1cae364350c78b8e.bundle.js.map",
+    "iframe.html": "/MasterDetail/iframe.html",
+    "precache-manifest.551ccee6585db2cbdb70a0208693bf90.js": "/MasterDetail/precache-manifest.551ccee6585db2cbdb70a0208693bf90.js",
+    "service-worker.js": "/MasterDetail/service-worker.js",
+    "static/media/primereact.min.css": "/MasterDetail/static/media/password-meter.d59e6dc2.png",
+    "static/media/theme.css": "/MasterDetail/static/media/open-sans-v15-latin-regular.cffb686d.woff2",
+    "static/media/primeicons.css": "/MasterDetail/static/media/primeicons.e5e0e944.svg",
+    "vendors~main.85bf1cae364350c78b8e.bundle.js.LICENSE.txt": "/MasterDetail/vendors~main.85bf1cae364350c78b8e.bundle.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "runtime~main.85bf1cae364350c78b8e.bundle.js",
+    "static/css/vendors~main.ab9a4431.chunk.css",
+    "vendors~main.85bf1cae364350c78b8e.bundle.js",
+    "static/css/main.08d5e131.chunk.css",
+    "main.85bf1cae364350c78b8e.bundle.js"
+  ]
+}
