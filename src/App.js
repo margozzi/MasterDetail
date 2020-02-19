@@ -1,5 +1,5 @@
 import React, {Component, Suspense, lazy} from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {HashRouter, Route, Switch} from 'react-router-dom';
 // Prime React related
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -26,7 +26,7 @@ class App extends Component {
 
     return (
       <div>
-        <BrowserRouter basename="/">
+        <HashRouter basename="/">
           <Suspense fallback={<WaitSpinner />}>
             <Switch>
               <Route exact path="/" component={Home} />
@@ -44,7 +44,7 @@ class App extends Component {
               <Route component={NotFound} />
             </Switch>
           </Suspense>
-        </BrowserRouter>
+        </HashRouter>
       </div>
     );
   }

@@ -2,8 +2,7 @@
   "name": "responsive",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
-  "proxy": "https://jsonplaceholder.typicode.com",
+  "homepage": "https://margozzi.github.io/MasterDetail",
   "dependencies": {
     "axios": "^0.19.2",
     "classnames": "^2.0.0",
@@ -22,7 +21,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "react-scripts build && rd /s /q docs && move build docs",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
@@ -49,6 +49,7 @@
     "@storybook/addon-links": "^5.0.0",
     "@storybook/addons": "^5.0.0",
     "@storybook/react": "^5.0.0",
+    "gh-pages": "^2.2.0",
     "react-styleguidist": "^10.6.2"
   }
 }

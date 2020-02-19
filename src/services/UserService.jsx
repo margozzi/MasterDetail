@@ -11,24 +11,24 @@ class UserService extends React.Component {
     }
     const params = config && config.filter ? {name: config.filter} : {};
     return axios
-      .get('/users', {
+      .get('https://jsonplaceholder.typicode.com/users', {
         params: params,
       })
       .then(res => res.data);
   };
 
   get = id => {
-    return axios.get('/users/' + id).then(res => res.data);
+    return axios.get('https://jsonplaceholder.typicode.com/users/' + id).then(res => res.data);
   };
 
   update = item => {
-    return axios.put('/users/' + item.id, JSON.stringify(item)).catch(error => {
+    return axios.put('https://jsonplaceholder.typicode.com/users/' + item.id, JSON.stringify(item)).catch(error => {
       throw error;
     });
   };
 
   create = item => {
-    return axios.post('/users', JSON.stringify(item)).catch(error => {
+    return axios.post('https://jsonplaceholder.typicode.com/users', JSON.stringify(item)).catch(error => {
       throw error;
     });
   };
@@ -37,11 +37,11 @@ class UserService extends React.Component {
     if (Array.isArray(items)) {
       let promises = [];
       for (let item of items) {
-        promises.push(axios.delete('/users/' + item.id));
+        promises.push(axios.delete('https://jsonplaceholder.typicode.com/users/' + item.id));
       }
       return axios.all(promises);
     } else {
-      return axios.delete('/users/' + items.id);
+      return axios.delete('https://jsonplaceholder.typicode.com/users/' + items.id);
     }
   };
 
