@@ -26,7 +26,7 @@ class App extends Component {
 
     return (
       <div>
-        <BrowserRouter>
+        <BrowserRouter basename="/">
           <Suspense fallback={<WaitSpinner />}>
             <Switch>
               <Route exact path="/" component={Home} />
