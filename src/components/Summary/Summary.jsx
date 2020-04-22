@@ -1,8 +1,8 @@
 import {PropTypes} from 'prop-types';
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import SelectionButton from '../SelectionButton/SelectionButton';
 
-class Summary extends Component {
+class Summary extends PureComponent {
   containerStyle = {
     flexWrap: 'nowrap',
     cursor: 'pointer',

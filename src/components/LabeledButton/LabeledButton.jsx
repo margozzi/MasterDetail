@@ -1,8 +1,8 @@
 import {PropTypes} from 'prop-types';
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {Button} from 'primereact/button';
 
-class LabeledButton extends Component {
+class LabeledButton extends PureComponent {
   render() {
     return (
       <>

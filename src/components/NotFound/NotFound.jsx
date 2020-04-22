@@ -1,7 +1,7 @@
 import React from 'react';
 import image from '../../resources/images/404ErrorFunny.jpg';
 
-class NotFound extends React.Component {
+class NotFound extends React.PureComponent {
   render() {
     return (
       <div className="p-grid p-dir-col p-align-center">

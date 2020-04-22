@@ -35,6 +35,8 @@ class MasterDetail extends Component {
     this.deleteSelected = this.deleteSelected.bind(this);
     this.updateSelectedAndUrl = this.updateSelectedAndUrl.bind(this);
     this.clearSelection = this.clearSelection.bind(this);
+
+    this.resizeDetectorRefreshOptions = {leading: false, trailing: true};
   }
 
   getInitialSelection = data => {
@@ -204,6 +206,9 @@ class MasterDetail extends Component {
     return (
       <ResizeDetector
         handleWidth
+        refreshMode="debounce"
+        refreshRate={300}
+        refreshOptions={this.resizeDetectorRefreshOptions}
         render={({width}) => {
           if (!width) {
             return <div></div>;

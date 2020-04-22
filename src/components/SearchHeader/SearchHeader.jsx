@@ -2,9 +2,9 @@ import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
 import {Menu} from 'primereact/menu';
 import {PropTypes} from 'prop-types';
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 
-class SearchHeader extends Component {
+class SearchHeader extends PureComponent {
   constructor(props) {
     super(props);
     this.label = React.createRef();
@@ -62,10 +62,10 @@ class SearchHeader extends Component {
   // Other options involve installing libraries like lodash wich seems overkill.
   debounce = (func, wait) => {
     let timeout;
-    return function() {
+    return function () {
       const context = this;
       const args = arguments;
-      const later = function() {
+      const later = function () {
         timeout = null;
         func.apply(context, args);
       };

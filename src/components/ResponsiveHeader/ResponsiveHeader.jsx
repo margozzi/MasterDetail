@@ -1,9 +1,9 @@
 import {PropTypes} from 'prop-types';
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import SearchHeader from '../SearchHeader/SearchHeader';
 import SelectionHeader from '../SelectionHeader/SelectionHeader';
 
-class ResponsiveHeader extends Component {
+class ResponsiveHeader extends PureComponent {
   render = () => {
     return (
       <>

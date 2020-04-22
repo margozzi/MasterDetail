@@ -13,6 +13,7 @@ class ResponsiveTable extends Component {
     this.onRowSelection = this.onRowSelection.bind(this);
     this.rowClassName = this.rowClassName.bind(this);
     this.changeAll = this.changeAll.bind(this);
+    this.resizeDetectorRefreshOptions = {leading: false, trailing: true};
   }
 
   summaryTemplate = item => {
@@ -26,7 +27,7 @@ class ResponsiveTable extends Component {
         line3Field={this.props.line3Field}
         selected={typeof this.props.selected.find(selected => selected.id === item.id) !== 'undefined'}
         onSelection={this.onRowSelection}
-        onShowDetails={() => {}}
+        onShowDetails={null}
       ></Summary>
     );
   };
@@ -105,6 +106,9 @@ class ResponsiveTable extends Component {
     return (
       <ResizeDetector
         handleWidth
+        refreshMode="debounce"
+        refreshRate={300}
+        refreshOptions={this.resizeDetectorRefreshOptions}
         render={({width}) => {
           if (!width) {
             return <div></div>;

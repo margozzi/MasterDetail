@@ -1,7 +1,7 @@
 import {PropTypes} from 'prop-types';
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 
-class SelectionButton extends Component {
+class SelectionButton extends PureComponent {
   initials;
   bgColor;
 

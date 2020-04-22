@@ -1,9 +1,9 @@
 import {Button} from 'primereact/button';
 import {PropTypes} from 'prop-types';
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {Dialog} from 'primereact/dialog';
 
-class YesNoDialog extends Component {
+class YesNoDialog extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,17 +1,22 @@
 import {Button} from 'primereact/button';
 import {Menu} from 'primereact/menu';
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {PropTypes} from 'prop-types';
 
-class SelectionHeader extends Component {
+class SelectionHeader extends PureComponent {
+  headerStyle = {marginBottom: '10px'};
+  selectedCountStyle = {fontSize: '18px', marginLeft: '20px'};
+  fullWidthStyle = {width: '100%'};
+  menuStyle = {marginLeft: '20px'};
+
   render() {
     return (
-      <div className="p-grid p-align-center p-nogutter" style={{marginBottom: '10px'}}>
+      <div className="p-grid p-align-center p-nogutter" style={this.headerStyle}>
         <Button className="p-col-fixed" icon="pi pi-chevron-left" onClick={this.props.clearCallback} />
-        <div className="p-col-fixed" style={{fontSize: '18px', marginLeft: '20px'}}>
+        <div className="p-col-fixed" style={this.selectedCountStyle}>
           {this.props.selectedCount}
         </div>
-        <div className="p-col" style={{width: '100%'}}>
+        <div className="p-col" style={this.fullWidthStyle}>
           &nbsp;
         </div>
         <Button className="p-col-fixed" icon="pi pi-trash" onClick={this.props.deleteCallback} />
@@ -21,7 +26,7 @@ class SelectionHeader extends Component {
             <Button
               className="p-col-fixed"
               icon="pi pi-bars"
-              style={{marginLeft: '20px'}}
+              style={this.menuStyle}
               onClick={event => this.menu.toggle(event)}
             />
           </>
