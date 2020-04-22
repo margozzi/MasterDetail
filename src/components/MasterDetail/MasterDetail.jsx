@@ -13,6 +13,7 @@ import WaitSpinner from './../WaitSpinner/WaitSpinner';
 class MasterDetail extends Component {
   // Is the current width considered 'mobile' size?
   mobile = false;
+  menu = null;
 
   constructor(props) {
     super(props);
@@ -83,7 +84,7 @@ class MasterDetail extends Component {
     return '';
   };
 
-  buildMenu = () => {
+  buildMenu = selected => {
     let menuItems = [
       {
         label: 'Selection',
@@ -104,12 +105,12 @@ class MasterDetail extends Component {
       },
     ];
     if (this.props.menuProvider) {
-      const providedItems = this.props.menuProvider.buildMenu(this.state.selected);
+      const providedItems = this.props.menuProvider.buildMenu(selected);
       if (providedItems) {
         menuItems.push(providedItems);
       }
     }
-    if (this.state.selected.length > 0) {
+    if (selected.length > 0) {
       menuItems.push({
         label: 'Delete',
         command: this.onDelete,
@@ -151,6 +152,7 @@ class MasterDetail extends Component {
             initialSearchString: initialSearchString,
           });
           this.props.selectionChangedCallback(selected);
+          this.menu = this.buildMenu(selected);
           if (this.overlayPanel && detailItem) {
             this.overlayPanel.show(detailItem);
           }
@@ -229,7 +231,7 @@ class MasterDetail extends Component {
                     selectedCount={this.state.selected.length}
                     searchCallback={this.onSearch}
                     mobile={this.mobile}
-                    menuModel={this.buildMenu()}
+                    menuModel={this.menu}
                   ></ResponsiveHeader>
                   <ResponsiveTable
                     data={this.state.data}
@@ -325,6 +327,7 @@ class MasterDetail extends Component {
     if (selected) {
       this.setState({selected: selected});
       this.props.selectionChangedCallback(selected);
+      this.menu = this.buildMenu(selected);
     }
   };
 

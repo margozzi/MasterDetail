@@ -44,7 +44,7 @@ export default ResponsiveHeader;
 ResponsiveHeader.propTypes = {
   /** The label to be used to identify the array of data */
   label: PropTypes.string,
-  /** Use an overlay panel to show detail, else inline. Defaults to false */
+  /** Display for mobile width Vs any larger width */
   mobile: PropTypes.bool.isRequired,
   /** Initial search string. Optional */
   initialSearchString: PropTypes.string,
